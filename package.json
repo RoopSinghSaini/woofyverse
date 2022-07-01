@@ -1,0 +1,37 @@
+{
+  "name": "ejs-challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "devStart": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": "16.x"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "dompurify": "^2.3.8",
+    "dotenv": "^16.0.1",
+    "ejs": "^3.1.8",
+    "express": "^4.16.3",
+    "express-session": "^1.17.3",
+    "http": "^0.0.1-security",
+    "jsdom": "^19.0.0",
+    "lodash": "^4.17.11",
+    "marked": "^4.0.16",
+    "mongoose": "^5.3.6",
+    "mongoose-findorcreate": "^3.0.0",
+    "multer": "^1.4.5-lts.1",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local-mongoose": "^7.1.2",
+    "string-strip-html": "^9.1.12",
+    "stripe": "^9.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}

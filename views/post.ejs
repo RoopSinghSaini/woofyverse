@@ -1,0 +1,29 @@
+
+<%- include("partials/secondHeader"); -%>
+
+<div class="container">
+    <h1 style="font-family: IBM Plex Sans, sans-serif; font-weight: 700; font-size:
+    36px"><%=dogName%></h1>
+   <% var options = { year: 'numeric', month: 'long', day: 'numeric' }; %>
+   <p style="font-family: IBM Plex Sans, sans-serif; font-weight:400; font-size: 16px;"><%=date.toLocaleDateString('en-us', options)%></p>
+
+   <div class="share-btn-continer">
+    <a href="https://reddit.com/submit?url=http://localhost:3000/posts/<%=_id%>&title=<%=dogName%>" class="reddit-btn"> <i class="fa-brands fa-reddit fa-2xl"></i></a>
+    
+    <a href="https://www.linkedin.com/shareArticle?url=http://localhost:3000/posts/<%=_id%>&title=<%=dogName%>" class="linkedin-btn"><i class="fa-brands fa-linkedin fa-2xl"></i></a>
+
+    <a  href="https://twitter.com/share?url=http://localhost:3000/posts/<%=_id%>&text=<%=dogName%>"  class="twitter-btn"><i class="fa-brands fa-twitter fa-2xl"></i></a>
+
+    <a href="https://www.facebook.com/sharer.php?u=http://localhost:3000/posts/<%=_id%>" class="facebook-btn"><i class="fa-brands fa-facebook fa-2xl"></i></a>
+
+    <a href="https://api.whatsapp.com/send?text=<%=dogName%> http://localhost:3000/posts/<%=_id%>" class="whatsapp-btn"><i class="fa-brands fa-whatsapp fa-2xl"></i></a>
+</div>
+
+   
+
+    <p  style="font-family: IBM Plex Sans, sans-serif; font-weight:400; font-size: 18px;"><%-additionalOne%></p>
+    <p><%-additionalTwo%></p>
+
+</div>
+
+<%- include("partials/footer"); -%>

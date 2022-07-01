@@ -1,0 +1,32 @@
+<%- include("partials/second"); -%>
+
+<div class="container">
+    <h3 style="text-align:center">Welcome to Donation Gateway</h3>
+    <form action="donation" method="POST">
+        <label for="name">Name</label>
+        <input name="donatorName" type="text" class="form-control">
+        <label>Address</label>
+        <input type="text" name="donatorAddress" class="form-control">
+        <label>State</label>
+        <input type="text" name="donatorState" class="form-control">
+        <label>City</label>
+        <input type="text" name="donatorCity" class="form-control">
+        <label>Postal Code</label>
+        <input type="number" name="postalCode" class="form-control">
+        <label>Country</label>
+        <input type="text" name="donatorCountry" class="form-control">
+        <br>
+       <script
+          src="//checkout.stripe.com/v2/checkout.js"
+          class="stripe-button"
+          data-key="<%= key %>"
+          data-amount="10000"
+          data-currency="inr"
+          data-name="Woofyverse"
+          data-description="Woofyverse Dog Rescue"
+          data-locale="auto" >
+        </script>
+    
+    </form>
+</div>
+<%- include("partials/footer"); -%>

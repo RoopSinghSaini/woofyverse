@@ -1,0 +1,71 @@
+
+<%- include("partials/header"); -%>
+<br>
+<div class="container">
+  <h1 style="font-family: IBM Plex Sans, sans-serif; font-weight: 700; font-size:
+  36px; text-align: center;" >Dogs Availabe for Adoption</h1> <br>
+  <!-- <div class="search">
+  <form action="">
+ 
+   
+        <label>Search by State</label>
+        <select class="fieldOne" name = "stateSearch">
+          <% for (const i in posts){ %>
+            <option selected disabled hidden>Select</option>
+            <option value="<%= posts[i].id %>"> <%= posts[i].state %>
+            </option>
+          <% } %>
+       </select> 
+       <label>Search by City</label>
+       
+       <select class="fieldTwo" name = "citySearch">
+        <% for (const i in posts){ %>
+          <option selected disabled hidden>Select</option>
+          <option value="<%= posts[i].id %>"> <%= posts[i].city %>
+          </option>
+        <% } %>
+        
+      </select> 
+      <button  class="btn btn-primary" type="submit" name="button">Apply Filter</button>
+   </form>
+  </div>
+
+<br>
+<br> -->
+
+<script>
+  function sendData(e) {
+    fetch('getPosts', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({payload: e.value})
+    });
+  }
+</script>
+
+  <% posts.forEach(function(post){ %>
+    <div class="row">
+      <div class="col">
+    <div class="card text-bg-dark ">
+      <img src="data:image/png;base64,<%=post.img.data.toString('base64')%>"
+      class="card-img-top" alt="profile image">
+      <div class="card-body">
+        <h5 style="font-family: IBM Plex Sans, sans-serif; font-weight: 700; font-size:
+        36px" class="card-title"><%=post.dogName%></h5>
+        <% var options = { year: 'numeric', month: 'long', day: 'numeric' }; %>
+        <p style="font-family: IBM Plex Sans, sans-serif; font-weight:400; font-size: 16px;"><%=post.date.toLocaleDateString('en-us', options)%></p>
+        <p style="font-family: IBM Plex Sans, sans-serif; font-weight:400; font-size: 18px;" class="card-text"><%=post.dogAge %></p>
+        <a href="/posts/<%=post._id%>" style="font-family: IBM Plex Sans, sans-serif; font-weight:400; font-size: 18px;" class="btn btn-primary">View Profile</a>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<% }) %>
+
+
+    
+
+    </div>
+  <br><br><br>
+<%- include("partials/footer"); -%>
