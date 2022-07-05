@@ -112,7 +112,7 @@ const postSchema ={
   date: Date,
   ownerName: String,
   shots: String,
-  dogAge: String,
+  dogAge: String, 
   spayed: String,
   neutered: String,
   vaccinated: String,
