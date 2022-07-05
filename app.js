@@ -16,7 +16,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate= require('mongoose-findorcreate')
 require('dotenv/config');
 
-const port= process.env.PORT || 3000;
+const port= process.env.PORT || 8000;
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -76,9 +76,9 @@ passport.deserializeUser(function(id, done) {
 
 
 passport.use(new GoogleStrategy({
-  clientID: process.env.CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/auth/google/woofyverse",
+  clientID: "347226813668-b7qq6253mhlrbfiddqc2qd9b9lg06stu.apps.googleusercontent.com",
+  clientSecret: "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",
+  callbackURL: "http://localhost:8000/auth/google/woofyverse",
   userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
 },
 function(accessToken, refreshToken, profile, cb) {
@@ -185,9 +185,22 @@ app.post("/register", function(req, res){
   
 });
 
-app.get("/logout", function(res,req){
-  req.logout();
-  res.redirect('/');
+app.use(
+  session({ 
+    cookie: {
+      path: '/',
+      httpOnly: false,
+      secure: false,
+      maxAge: null,
+    },
+  })
+)
+
+app.get('/logout', function(req, res, next) {
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/');
+  });
 });
 
 app.get("/", function(req, res){
@@ -325,7 +338,7 @@ app.post('/donation', function(req, res){
 
 
 setInterval(() => {
-  http.get("https://blog-arshroop-singh-saini.herokuapp.com/");
+  http.get("https://woofyverse.herokuapp.com/");
 }, 25 * 60 * 1000); // every 25 minutes
 
 app.listen(port, function() {
