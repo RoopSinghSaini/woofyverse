@@ -78,7 +78,7 @@ passport.deserializeUser(function(id, done) {
 passport.use(new GoogleStrategy({
   clientID: "347226813668-b7qq6253mhlrbfiddqc2qd9b9lg06stu.apps.googleusercontent.com",
   clientSecret: "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",
-  callbackURL: "http://localhost:8000/auth/google/woofyverse",
+  callbackURL: "https://woofyverse.herokuapp.com/auth/google/woofyverse",
   userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
 },
 function(accessToken, refreshToken, profile, cb) {
@@ -111,6 +111,7 @@ const postSchema ={
   dogName: String,
   date: Date,
   ownerName: String,
+  shots: String,
   dogAge: String,
   spayed: String,
   neutered: String,
@@ -124,6 +125,7 @@ const postSchema ={
   ownerPhone: Number,
   additionalOne: String,
   additionalTwo: String,
+  email: String ,
   img:
   {
       data: Buffer,
@@ -229,11 +231,12 @@ app.get("/compose", function(req, res){
 });
 
 // Using the upload middleware
-app.post("/compose", upload.single('image'), function(req, res){
+app.post("/compose", upload.single('imageOne'), function(req, res){
   const post = new Post({
     dogName: req.body.dogName,
     date: req.body.postDate,
     dogAge: req.body.dogAge,
+    shots: req.body.shots,
     ownerName: req.body.ownerName,
     ownerAddress: req.body.ownerAddress,
     ownerPhone: req.body.ownerPhone,
@@ -248,6 +251,7 @@ app.post("/compose", upload.single('image'), function(req, res){
     dogs: req.body.dogs,
     state: req.body.ownerState,
     city: req.body.ownerCity,
+    email: req.body.email,
     img: {
       data: fs.readFileSync(path.join(__dirname + '/public/uploads/' + req.file.filename)),
       contentType: 'image/png'
@@ -281,11 +285,14 @@ const requestedPostId = req.params.postId;
       neutered: post.neutered,
       vaccinated: post.vaccinated,
       kids: post.kids,
+      shots: post.shots,
+      gender:post.dogGender,
       cats: post.cats,
       dogs: post.dogs,
       state: post.state,
       city: post.city,
       img: post.img,
+      email: post.email,
       _id: requestedPostId 
     });
   });

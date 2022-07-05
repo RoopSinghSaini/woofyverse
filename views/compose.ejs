@@ -5,11 +5,11 @@
     <form class="" action="/compose" method="post" enctype="multipart/form-data">
       <div class="form-group">
         <label>Name</label>
-        <input  class="form-control" type="text" name="dogName">
+        <input  class="form-control" type="text" name="dogName" required>
         <label>Date</label>
-        <input type="date" name="postDate" class="form-control">
+        <input type="date" name="postDate" class="form-control" required>
          <label>Age</label>
-        <select class="form-control" name = "dogAge">
+        <select class="form-control" name = "dogAge" required>
           <option selected disabled hidden>Select</option>
           <option value = "Puppy">Puppyhood</option>
           <option value = "Adolescence">Adolescence</option>
@@ -19,72 +19,78 @@
        
   
        <label>Gender</label>
-       <select class="form-control" name = "dogGender">
+       <select class="form-control" name = "dogGender" required>
         <option selected disabled hidden>Select</option>
          <option value = "Male">Male</option>
          <option value = "Female">Female</option>
       </select>
       <label>Spayed</label>
-       <select class="form-control" name = "spayed">
+       <select class="form-control" name = "spayed" required>
         <option selected disabled hidden>Select</option>
          <option value = "Yes">Yes</option>
          <option value = "No">No</option>
       </select>
       <label>Neutered</label>
-      <select class="form-control" name = "neutered">
+      <select class="form-control" name = "neutered" required>
         <option selected disabled hidden>Select</option>
         <option value = "Yes">Yes</option>
         <option value = "No">No</option>
      </select>
      <label>Vaccinated</label>
-     <select class="form-control" name = "vaccinated">
+     <select class="form-control" name = "vaccinated" required>
       <option selected disabled hidden>Select</option>
        <option value = "Yes">Yes</option>
        <option value = "No">No</option>
     </select>
     <label>Good with Kids</label>
-       <select class="form-control" name = "kids">
+       <select class="form-control" name = "kids" required>
         <option selected disabled hidden>Select</option>
          <option value = "Yes">Yes</option>
          <option value = "No">No</option>
       </select>
       <label>Good with Cats</label>
-      <select class="form-control" name = "cats">
+      <select class="form-control" name = "cats" required>
         <option selected disabled hidden>Select</option>
         <option value = "Yes">Yes</option>
         <option value = "No">No</option>
      </select>
      <label>Good with Dogs</label>
-       <select class="form-control" name = "dogs">
+       <select class="form-control" name = "dogs" required>
         <option selected disabled hidden>Select</option>
          <option value = "Yes">Yes</option>
          <option value = "No">No</option>
       </select>
+      <label>Shots up to Date</label>
+      <select class="form-control" name = "shots" required>
+       <option selected disabled hidden>Select</option>
+        <option value = "Yes">Yes</option>
+        <option value = "No">No</option>
+     </select>
       <label for="files">Select some images of the Dog</label>
-      <input id="image" name="image" class="form-control" type="file" >
-
-        
+      <input id="imageOne" name="imageOne" class="form-control" type="file" required >
+      <input id="imageTwo" name="imageOne" class="form-control" type="file" required >
+      <input id="imageThree" name="imageOne" class="form-control" type="file" required >
         <br>
 
         <h1>Owner Details</h1>
         <label>Name</label>
-        <input  class="form-control" type="text" name="ownerName">
+        <input  class="form-control" type="text" name="ownerName" required>
         <label>Address</label>
-        <input type="text" name="ownerAddress" class="form-control">
+        <input type="text" name="ownerAddress" class="form-control" required>
         <label>State</label>
-        <input type="text" name="ownerState" class="form-control">
+        <input type="text" name="ownerState" class="form-control" required>
         <label>City</label>
-        <input type="text" name="ownerCity" class="form-control">
+        <input type="text" name="ownerCity" class="form-control" required>
         <label>Phone</label>
-        <input type="number" name="ownerPhone" class="form-control">
+        <input type="number" name="ownerPhone" class="form-control" required>
 
         <br>
 
         <h1>Additional Details</h1>
         <label>Why do you want to Rehome your pet?</label>
-        <textarea id="aTag"  class="form-contro" name="additionalOne" rows="5" cols="30"></textarea>
+        <textarea id="aTag"  class="form-contro" name="additionalOne" rows="5" cols="30" required></textarea>
         <label>Additional info about the pet</label>
-        <textarea id="bTag" class="form-control" name="additionalTwo" rows="5" cols="30"></textarea>
+        <textarea id="bTag" class="form-control" name="additionalTwo" rows="5" cols="30" required></textarea>
       </div>
       <button class="btn btn-primary" type="submit" name="button">Rehome</button>
     </form>

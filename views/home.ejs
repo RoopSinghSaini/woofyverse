@@ -2,36 +2,9 @@
 <%- include("partials/header"); -%>
 <br>
 <div class="container">
-  <h1 style="font-family: IBM Plex Sans, sans-serif; font-weight: 700; font-size:
-  36px; text-align: center;" >Dogs Availabe for Adoption</h1> <br>
-  <!-- <div class="search">
-  <form action="">
- 
-   
-        <label>Search by State</label>
-        <select class="fieldOne" name = "stateSearch">
-          <% for (const i in posts){ %>
-            <option selected disabled hidden>Select</option>
-            <option value="<%= posts[i].id %>"> <%= posts[i].state %>
-            </option>
-          <% } %>
-       </select> 
-       <label>Search by City</label>
-       
-       <select class="fieldTwo" name = "citySearch">
-        <% for (const i in posts){ %>
-          <option selected disabled hidden>Select</option>
-          <option value="<%= posts[i].id %>"> <%= posts[i].city %>
-          </option>
-        <% } %>
-        
-      </select> 
-      <button  class="btn btn-primary" type="submit" name="button">Apply Filter</button>
-   </form>
-  </div>
-
-<br>
-<br> -->
+  <h1 style="font-weight: 700; font-size:
+  40px; text-align: center;" >Dogs Availabe for Adoption</h1> <br>
+</div>
 
 <script>
   function sendData(e) {
@@ -43,29 +16,51 @@
   }
 </script>
 
+
+
+
+
+<div class="conatiner">
+  <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4">
   <% posts.forEach(function(post){ %>
-    <div class="row">
-      <div class="col">
-    <div class="card text-bg-dark ">
-      <img src="data:image/png;base64,<%=post.img.data.toString('base64')%>"
-      class="card-img-top" alt="profile image">
-      <div class="card-body">
-        <h5 style="font-family: IBM Plex Sans, sans-serif; font-weight: 700; font-size:
-        36px" class="card-title"><%=post.dogName%></h5>
-        <% var options = { year: 'numeric', month: 'long', day: 'numeric' }; %>
-        <p style="font-family: IBM Plex Sans, sans-serif; font-weight:400; font-size: 16px;"><%=post.date.toLocaleDateString('en-us', options)%></p>
-        <p style="font-family: IBM Plex Sans, sans-serif; font-weight:400; font-size: 18px;" class="card-text"><%=post.dogAge %></p>
-        <a href="/posts/<%=post._id%>" style="font-family: IBM Plex Sans, sans-serif; font-weight:400; font-size: 18px;" class="btn btn-primary">View Profile</a>
+ 
+        <div class="card text-center">
+          <img src="data:image/png;base64,<%=post.img.data.toString('base64')%>"
+          class="card-img-top" alt="profile image">
+          <div class="card-body">
+           
+
+          <h4 class="card-title" style="font-weight: 700; font-size:25px; text-align: center;"><%= post.dogName %></h4>
+          <% var options = { year: 'numeric', month: 'long', day: 'numeric' }; %>
+          <p"><%=post.date.toLocaleDateString('en-us', options)%></p>
+          <h6 class="card-text"><%=post.gender %></h6>
+          <div><span><%=post.gender%>,</span> <span><%=post.dogAge%></span></div>
+          <div><span><%=post.city%>,</span> <span><%=post.state%></span></div>
+          <br>
+          <div class="share-btn-continer">
+            <a href="https://reddit.com/submit?url=http://localhost:3000/posts/<%=post._id%>&title=<%=post.dogName%>" class="reddit-btn"> <i class="fa-brands fa-reddit fa-2xl"></i></a>
+            
+            <a href="https://www.linkedin.com/shareArticle?url=http://localhost:3000/posts/<%=post._id%>&title=<%=post.dogName%>" class="linkedin-btn"><i class="fa-brands fa-linkedin fa-2xl"></i></a>
+        
+            <a  href="https://twitter.com/share?url=http://localhost:3000/posts/<%=post._id%>&text=<%=post.dogName%>"  class="twitter-btn"><i class="fa-brands fa-twitter fa-2xl"></i></a>
+        
+            <a href="https://www.facebook.com/sharer.php?u=http://localhost:3000/posts/<%=post._id%>" class="facebook-btn"><i class="fa-brands fa-facebook fa-2xl"></i></a>
+        
+            <a href="https://api.whatsapp.com/send?text=<%=post.dogName%> http://localhost:3000/posts/<%=post._id%>" class="whatsapp-btn"><i class="fa-brands fa-whatsapp fa-2xl"></i></a>
+        </div>
+        <br>
+      <a href="/posts/<%=post._id%>" style="font-weight:400; font-size: 18px;" class="btn btn-primary">View Profile</a>
+
+          </div>
       </div>
-    </div>
-  </div>
-</div>
+
 <br>
 <% }) %>
-
+</div>
+</div>
 
     
 
-    </div>
+    
   <br><br><br>
 <%- include("partials/footer"); -%>
