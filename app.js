@@ -125,7 +125,6 @@ const postSchema ={
   ownerPhone: Number,
   additionalOne: String,
   additionalTwo: String,
-  email: String ,
   img:
   {
       data: Buffer,
@@ -231,7 +230,7 @@ app.get("/compose", function(req, res){
 });
 
 // Using the upload middleware
-app.post("/compose", upload.single('imageOne'), function(req, res){
+app.post("/compose", upload.single('image'), function(req, res){
   const post = new Post({
     dogName: req.body.dogName,
     date: req.body.postDate,
@@ -251,7 +250,6 @@ app.post("/compose", upload.single('imageOne'), function(req, res){
     dogs: req.body.dogs,
     state: req.body.ownerState,
     city: req.body.ownerCity,
-    email: req.body.email,
     img: {
       data: fs.readFileSync(path.join(__dirname + '/public/uploads/' + req.file.filename)),
       contentType: 'image/png'
@@ -291,8 +289,7 @@ const requestedPostId = req.params.postId;
       dogs: post.dogs,
       state: post.state,
       city: post.city,
-      img: post.img,
-      email: post.email,
+      img: post.img,  
       _id: requestedPostId 
     });
   });
