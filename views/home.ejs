@@ -16,17 +16,13 @@
   }
 </script>
 
-
-
-
-
 <div class="conatiner">
   <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4">
   <% posts.forEach(function(post){ %>
  
         <div class="card text-center">
-          <img src="data:image/png;base64,<%=post.img.data.toString('base64')%>"
-          class="card-img-top" alt="profile image">
+          <img src="<%=post.imagePath%>"class="card-img-top" alt="Logo"></img>
+      
           <div class="card-body">
            
 
@@ -37,29 +33,23 @@
           <div><span><%=post.city%>,</span> <span><%=post.state%></span></div>
           <br>
           <div class="share-btn-continer">
-            <a href="https://reddit.com/submit?url=http://localhost:3000/posts/<%=post._id%>&title=<%=post.dogName%>" class="reddit-btn"> <i class="fa-brands fa-reddit fa-2xl"></i></a>
+            <a href="https://reddit.com/submit?url=https://woofyverse.herokuapp.com/posts/<%=post._id%>&title=<%=post.dogName%>" target="_blank"  class="reddit-btn"> <i class="fa-brands fa-reddit fa-2xl"></i></a>
             
-            <a href="https://www.linkedin.com/shareArticle?url=http://localhost:3000/posts/<%=post._id%>&title=<%=post.dogName%>" class="linkedin-btn"><i class="fa-brands fa-linkedin fa-2xl"></i></a>
+            <a href="https://www.linkedin.com/shareArticle?url=https://woofyverse.herokuapp.com/posts/<%=post._id%>&title=<%=post.dogName%>" target="_blank" class="linkedin-btn"><i class="fa-brands fa-linkedin fa-2xl"></i></a>
         
-            <a  href="https://twitter.com/share?url=http://localhost:3000/posts/<%=post._id%>&text=<%=post.dogName%>"  class="twitter-btn"><i class="fa-brands fa-twitter fa-2xl"></i></a>
+            <a  href="https://twitter.com/share?url=https://woofyverse.herokuapp.com/posts/<%=post._id%>&text=<%post.dogName%>" target="_blank"  class="twitter-btn"><i class="fa-brands fa-twitter fa-2xl"></i></a>
         
-            <a href="https://www.facebook.com/sharer.php?u=http://localhost:3000/posts/<%=post._id%>" class="facebook-btn"><i class="fa-brands fa-facebook fa-2xl"></i></a>
+            <a href="https://www.facebook.com/sharer.php?u=https://woofyverse.herokuapp.com/posts/<%=post._id%>" target="_blank" class="facebook-btn"><i class="fa-brands fa-facebook fa-2xl"></i></a>
         
-            <a href="https://api.whatsapp.com/send?text=<%=post.dogName%> http://localhost:3000/posts/<%=post._id%>" class="whatsapp-btn"><i class="fa-brands fa-whatsapp fa-2xl"></i></a>
+            <a href="https://api.whatsapp.com/send?text=<%=post.dogName%> https://woofyverse.herokuapp.com/posts/<%=post._id%>" target="_blank"  class="whatsapp-btn"><i class="fa-brands fa-whatsapp fa-2xl"></i></a>
         </div>
         <br>
       <a href="/posts/<%=post._id%>" style="font-weight:400; font-size: 18px;" class="btn btn-primary">View Profile</a>
-
           </div>
       </div>
-
 <br>
 <% }) %>
 </div>
 </div>
-
-    
-
-    
   <br><br><br>
 <%- include("partials/footer"); -%>

@@ -7,15 +7,15 @@
    <p style="font-family: IBM Plex Sans, sans-serif; font-weight:400; font-size: 16px;"><%=date.toLocaleDateString('en-us', options)%></p>
 
    <div class="share-btn-continer">
-    <a href="https://reddit.com/submit?url=http://localhost:3000/posts/<%=_id%>&title=<%=dogName%>" class="reddit-btn"> <i class="fa-brands fa-reddit fa-2xl"></i></a>
+    <a href="https://reddit.com/submit?url=https://woofyverse.herokuapp.com/posts/<%=_id%>&title= Adopt <%=dogName%>" target="_blank"  class="reddit-btn"> <i class="fa-brands fa-reddit fa-2xl"></i></a>
     
-    <a href="https://www.linkedin.com/shareArticle?url=http://localhost:3000/posts/<%=_id%>&title=<%=dogName%>" class="linkedin-btn"><i class="fa-brands fa-linkedin fa-2xl"></i></a>
+    <a href="https://www.linkedin.com/shareArticle?url=https://woofyverse.herokuapp.com/posts/<%=_id%>&title= Adopt <%=dogName%>" target="_blank"  class="linkedin-btn"><i class="fa-brands fa-linkedin fa-2xl"></i></a>
 
-    <a  href="https://twitter.com/share?url=http://localhost:3000/posts/<%=_id%>&text=<%=dogName%>"  class="twitter-btn"><i class="fa-brands fa-twitter fa-2xl"></i></a>
+    <a  href="https://twitter.com/share?url=https://woofyverse.herokuapp.com/posts/<%=_id%>&text= Adopt <%=dogName%>" target="_blank"   class="twitter-btn"><i class="fa-brands fa-twitter fa-2xl"></i></a>
 
-    <a href="https://www.facebook.com/sharer.php?u=http://localhost:3000/posts/<%=_id%>" class="facebook-btn"><i class="fa-brands fa-facebook fa-2xl"></i></a>
+    <a href="https://www.facebook.com/sharer.php?u=https://woofyverse.herokuapp.com/posts/<%=_id%>" target="_blank" class="facebook-btn"><i class="fa-brands fa-facebook fa-2xl"></i></a>
 
-    <a href="https://api.whatsapp.com/send?text=<%=dogName%> http://localhost:3000/posts/<%=_id%>" class="whatsapp-btn"><i class="fa-brands fa-whatsapp fa-2xl"></i></a>
+    <a href="https://api.whatsapp.com/send?text= Adopt <%=dogName%> https://woofyverse.herokuapp.com/posts/<%=_id%>" target="_blank"  class="whatsapp-btn"><i class="fa-brands fa-whatsapp fa-2xl"></i></a>
 </div>
 <br>
 <p  style="font-family: IBM Plex Sans, sans-serif; font-weight:400; font-size: 18px;"><%-additionalOne%></p>
@@ -28,13 +28,14 @@
     </div>
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img height="400px"  src="data:image/png;base64,<%=img.data.toString('base64')%>" class="d-block w-100" alt="imageOne">
+        
+       <img height="400px"  src="<%=imagePath%>" class="d-block w-100" alt="imageOne"> 
+           </div>
+      <div class="carousel-item">
+        <img height="400px"  src="<%=imagePath%>" class="d-block w-100" alt="imageTwo"> 
       </div>
       <div class="carousel-item">
-        <img height="400px"  src="data:image/png;base64,<%=img.data.toString('base64')%>" class="d-block w-100" alt="imageTwo">
-      </div>
-      <div class="carousel-item">
-        <img height="400px" src="data:image/png;base64,<%=img.data.toString('base64')%>" class="d-block w-100" alt="imageThree">
+        <img height="400px" src="<%=imagePath%>" class="d-block w-100" alt="imageThree"> 
       </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">

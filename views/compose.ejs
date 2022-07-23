@@ -2,12 +2,13 @@
 <%- include("partials/second"); -%>
 <div class="container">
     <h1>Pet Details</h1>
+ 
     <form class="" action="/compose" method="post" enctype="multipart/form-data">
       <div class="form-group">
         <label>Name</label>
-        <input  class="form-control" type="text" name="dogName" >
+        <input  class="form-control" type="text" name="dogName" required>
         <label>Date</label>
-        <input type="date" name="postDate" class="form-control" >
+        <input type="date" name="postDate" class="form-control" required >
          <label>Age</label>
         <select class="form-control" name = "dogAge" >
           <option selected disabled hidden>Select</option>
@@ -25,7 +26,7 @@
          <option value = "Female">Female</option>
       </select>
       <label>Spayed</label>
-       <select class="form-control" name = "spayed" >
+       <select class="form-control" name = "spayed"  >
         <option selected disabled hidden>Select</option>
          <option value = "Yes">Yes</option>
          <option value = "No">No</option>
@@ -66,21 +67,21 @@
         <option value = "Yes">Yes</option>
         <option value = "No">No</option>
      </select>
-      <label for="files">Select some images of the Dog</label>
+      <label for="files" required>Select some images of the Dog</label>
       <input id="imageOne" name="imageOne" class="form-control" type="file" >
         <br>
 
         <h1>Owner Details</h1>
         <label>Name</label>
-        <input  class="form-control" type="text" name="ownerName" >
+        <input  class="form-control" type="text" name="ownerName" required>
         <label>Address</label>
-        <input type="text" name="ownerAddress" class="form-control" >
+        <input type="text" name="ownerAddress" class="form-control" required>
         <label>State</label>
-        <input type="text" name="ownerState" class="form-control" >
+        <input type="text" name="ownerState" class="form-control" required>
         <label>City</label>
-        <input type="text" name="ownerCity" class="form-control" >
+        <input type="text" name="ownerCity" class="form-control" required>
         <label>Phone</label>
-        <input type="number" name="ownerPhone" class="form-control" >
+        <input type="number" name="ownerPhone" class="form-control" required>
 
         <br>
 

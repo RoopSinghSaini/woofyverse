@@ -5,25 +5,37 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require('mongoose');
 const http = require('http');
-const multer = require('multer')
-const fs = require('fs')
-const path = require('path');
+const fs = require('fs');
 const session = require('express-session');
 const passport = require("passport");
 // Passport local mongoose will also salt and hash our passwords
 const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const findOrCreate= require('mongoose-findorcreate')
-require('dotenv/config');
+const findOrCreate= require('mongoose-findorcreate');
+require('dotenv').config();
+const util= require('util');
+const unlinkFile= util.promisify(fs.unlink);;
+const fileUpload = require('express-fileupload');
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({ 
+  cloud_name: 'woofyverse', 
+  api_key: '812158734764712', 
+  api_secret: 'aG5zKoQB1iX2tnqZVfmUsqVOKNU' 
+});
 
 const port= process.env.PORT || 8000;
 const app = express();
 
+app.use(fileUpload({
+  useTempFiles:true
+}))
+
 app.set('view engine', 'ejs');
 
-var Publishable_Key= 'pk_test_51LGKXNSBGKec0tIDWdLF8rK7eHBC4ePrp2IhZgyLQalMzwfFJy601wgs3pBnLOWwIqVPd8BT5bOYwnm61FwUYT9D00rhrPFyNX'
+var Publishable_Key=process.env.CLIENT_ID
 
-var Secret_key='sk_test_51LGKXNSBGKec0tIDvKV8DRGBCaMa4lYqAEM0XDki3sB3MWS9ypvwWFRAPMC1y6yivAzysUetnboxwDAYc6LiHZy600UnKJYTHC'
+var Secret_key=process.env.CLIENT_SECRET
 
 
 const stripe= require('stripe')(Secret_key)
@@ -73,12 +85,10 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-
-
 passport.use(new GoogleStrategy({
   clientID: "347226813668-b7qq6253mhlrbfiddqc2qd9b9lg06stu.apps.googleusercontent.com",
   clientSecret: "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",
-  callbackURL: "https://woofyverse.herokuapp.com/auth/google/woofyverse",
+  callbackURL: "http://localhost:8000/auth/google/woofyverse",
   userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
 },
 function(accessToken, refreshToken, profile, cb) {
@@ -92,44 +102,83 @@ app.get("/auth/google",
   passport.authenticate('google', { scope: ["profile"] })
 );
 
-// Using multer for uploading image files to our database
-// defining the destination location for saving our images and a format for naming each image file.
-const Storage= multer.diskStorage({
-  destination: 'public/uploads',
-  filename:(req,file,cb)=>{
-    cb(null, file.fieldname + '-' + Date.now());
-  },
-})
-
-// Creating the middleware that we would use in our app.post for handling file posts
-const upload = multer({
-  storage: Storage
-})
-
-
 const postSchema ={
-  dogName: String,
-  date: Date,
-  ownerName: String,
-  shots: String,
-  dogAge: String, 
-  spayed: String,
-  neutered: String,
-  vaccinated: String,
-  kids: String,
-  cats: String,
-  dogs: String,
-  state: String,
-  city: String,
-  ownerAddress: String,
-  ownerPhone: Number,
-  additionalOne: String,
-  additionalTwo: String,
-  img:
-  {
-      data: Buffer,
-      contentType: String
-  }
+  dogName: {
+   type: String,
+   required: true
+  },
+  date: {
+    type:Date,
+    required: true
+  },
+  ownerName: {
+    type:String,
+    required: true
+  },
+  shots: {
+    type:String,
+    required: true
+  },
+  dogAge: {
+    type:String,
+    required: true
+  },
+  spayed: {
+    type:String,
+    required: true
+  },
+  neutered: {
+    type:String,
+    required: true
+  },
+  vaccinated: {
+    type:String,
+    required: true
+  },
+  kids: {
+    type:String,
+    required: true
+  },
+  cats: {
+    type:String,
+    requied: true
+  },
+  dogs: {
+    type:String,
+    required: true
+  },
+  state: {
+    type:String,
+    required: true
+  },
+  city: {
+    type:String,
+    required: true
+  },
+  gender: {
+    type:String,
+    required: true
+  },
+  ownerAddress: {
+    type:String,
+    required: true
+  },
+  ownerPhone: {
+    type:Number,
+    required:true
+  },
+  additionalOne: {
+    type:String,
+    required: true
+  },
+  additionalTwo: {
+    type:String,
+    required: true
+  },
+  imagePath: {
+    type:String,
+    required : true
+}
 };
 const Post = mongoose.model("Post", postSchema);
 
@@ -205,12 +254,17 @@ app.get('/logout', function(req, res, next) {
 });
 
 app.get("/", function(req, res){
-  Post.find({}, function(err, posts){
-    res.render("home", {
-      posts: posts,
-      });
-  }).sort({date:"desc"});
-
+  // if user is registered and signedIn
+  if(req.isAuthenticated()){
+    Post.find({}, function(err, posts){
+      res.render("home", {
+        posts: posts,
+        });
+    }).sort({date:"desc"});
+    // If not then first login in order to access the compose page
+  }else{
+    res.redirect("/login")
+  }
 });
 
 app.post('/getPosts', (req,res)=>{
@@ -218,53 +272,52 @@ app.post('/getPosts', (req,res)=>{
   console.log(payload);
 });
 
+
 app.get("/compose", function(req, res){
-  // if user is registered and signedIn
   if(req.isAuthenticated()){
     res.render("compose");
     // If not then first login in order to access the compose page
   }else{
     res.redirect("/login")
   }
-
+   
 });
 
-// Using the upload middleware
-app.post("/compose", upload.single('image'), function(req, res){
-  const post = new Post({
-    dogName: req.body.dogName,
-    date: req.body.postDate,
-    dogAge: req.body.dogAge,
-    shots: req.body.shots,
-    ownerName: req.body.ownerName,
-    ownerAddress: req.body.ownerAddress,
-    ownerPhone: req.body.ownerPhone,
-    additionalOne: req.body.additionalOne,
-    additionalTwo: req.body.additionalTwo,
-    spayed: req.body.spayed,
-    gender:req.body.dogGender,
-    neutered: req.body.neutered,
-    vaccinated: req.body.vaccinated,
-    kids: req.body.kids,
-    cats: req.body.cats,
-    dogs: req.body.dogs,
-    state: req.body.ownerState,
-    city: req.body.ownerCity,
-    img: {
-      data: fs.readFileSync(path.join(__dirname + '/public/uploads/' + req.file.filename)),
-      contentType: 'image/png'
-  }
-    
+
+app.post("/compose", function(req, res){
+
+  const file = req.files.imageOne;
+  cloudinary.uploader.upload(file.tempFilePath,(err,result)=>{
+    console.log(result);
+    const post = new Post({
+      dogName: req.body.dogName,
+      date: req.body.postDate,
+      dogAge: req.body.dogAge,
+      shots: req.body.shots,
+      ownerName: req.body.ownerName,
+      ownerAddress: req.body.ownerAddress,
+      ownerPhone: req.body.ownerPhone,
+      additionalOne: req.body.additionalOne,
+      additionalTwo: req.body.additionalTwo,
+      spayed: req.body.spayed,
+      gender:req.body.dogGender,
+      neutered: req.body.neutered,
+      vaccinated: req.body.vaccinated,
+      kids: req.body.kids,
+      cats: req.body.cats,
+      dogs: req.body.dogs,
+      state: req.body.ownerState,
+      city: req.body.ownerCity,
+      imagePath: result.url,
+    });
+    post.save(function(err){
+      if (!err){
+          res.redirect("/");
+      }
+    });
   });
-
-
-  post.save(function(err){
-    if (!err){
-        res.redirect("/");
-    }
   });
-});
-
+ 
 app.get("/posts/:postId", function(req, res){
 
 const requestedPostId = req.params.postId;
@@ -284,12 +337,12 @@ const requestedPostId = req.params.postId;
       vaccinated: post.vaccinated,
       kids: post.kids,
       shots: post.shots,
-      gender:post.dogGender,
+      gender:post.gender,
       cats: post.cats,
       dogs: post.dogs,
       state: post.state,
       city: post.city,
-      img: post.img,  
+      imagePath: post.imagePath,
       _id: requestedPostId 
     });
   });
