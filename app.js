@@ -102,6 +102,14 @@ app.get("/auth/google",
   passport.authenticate('google', { scope: ["profile"] })
 );
 
+app.get("/auth/google/woofyverse",
+  passport.authenticate('google', { failureRedirect: "/login" }),
+  function(req, res) {
+    // Successful authentication, redirect to adoopt page.
+    res.redirect("/");
+  });
+
+
 const postSchema ={
   dogName: {
    type: String,
@@ -182,16 +190,6 @@ const postSchema ={
 };
 const Post = mongoose.model("Post", postSchema);
 
-app.get("/auth/google",
-  passport.authenticate('google', { scope: ["profile"] })
-);
-
-app.get("/auth/google/woofyverse",
-  passport.authenticate('google', { failureRedirect: "/login" }),
-  function(req, res) {
-    // Successful authentication, redirect to compose page.
-    res.redirect("/compose");
-  });
 
 app.get("/login", function(req, res){
   res.render("login");
