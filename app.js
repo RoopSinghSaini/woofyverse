@@ -88,7 +88,7 @@ passport.deserializeUser(function(id, done) {
 passport.use(new GoogleStrategy({
   clientID: "347226813668-b7qq6253mhlrbfiddqc2qd9b9lg06stu.apps.googleusercontent.com",
   clientSecret: "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",
-  callbackURL: "http://localhost:8000/auth/google/woofyverse",
+  callbackURL: "https://woofyverse.herokuapp.com/auth/google/woofyverse",
   userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
 },
 function(accessToken, refreshToken, profile, cb) {
