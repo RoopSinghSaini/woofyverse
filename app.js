@@ -18,7 +18,7 @@ const config = {
   authRequired: false,
   auth0Logout: true,
   secret: 'a long, randomly-generated string stored in env',
-  baseURL: 'http://localhost:8000',
+  baseURL: 'http://woofyverse.herokuapp.com',
   clientID: 'u7vJi1WJIxdNMLWN1LAyjleCfvFR4Sta',
   issuerBaseURL: 'https://dev-hri34pn2.us.auth0.com'
 };
