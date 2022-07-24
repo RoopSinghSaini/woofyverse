@@ -6,18 +6,24 @@ const ejs = require("ejs");
 const mongoose = require('mongoose');
 const http = require('http');
 const fs = require('fs');
-const session = require('express-session');
-const passport = require("passport");
-// Passport local mongoose will also salt and hash our passwords
-const passportLocalMongoose = require("passport-local-mongoose");
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const findOrCreate= require('mongoose-findorcreate');
 require('dotenv').config();
 const util= require('util');
 const unlinkFile= util.promisify(fs.unlink);;
 const fileUpload = require('express-fileupload');
 const cloudinary = require('cloudinary').v2;
+const { auth, requiresAuth } = require('express-openid-connect');
 
+// Using openid library for authentication and session management.
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: 'a long, randomly-generated string stored in env',
+  baseURL: 'http://localhost:8000',
+  clientID: 'u7vJi1WJIxdNMLWN1LAyjleCfvFR4Sta',
+  issuerBaseURL: 'https://dev-hri34pn2.us.auth0.com'
+};
+
+// Using cloudinary library for hosting images path and then storing images path in mongodb database.
 cloudinary.config({ 
   cloud_name: 'woofyverse', 
   api_key: '812158734764712', 
@@ -26,7 +32,7 @@ cloudinary.config({
 
 const port= process.env.PORT || 8000;
 const app = express();
-
+app.use(auth(config));
 app.use(fileUpload({
   useTempFiles:true
 }))
@@ -37,78 +43,14 @@ var Publishable_Key=process.env.CLIENT_ID
 
 var Secret_key=process.env.CLIENT_SECRET
 
-
 const stripe= require('stripe')(Secret_key)
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-// Session Config
-app.use(session({
-  secret: "Woof!",
-  resave: false,
-  saveUninitialized: false
-}));
-
-// Initialized passport
-app.use(passport.initialize());
-// Using passport to manage site sessions
-app.use(passport.session());
-
+// Connecting with our mongodb database
 mongoose.connect("mongodb+srv://arshroop:Asdfjkl123@cluster0.z4k2m.mongodb.net/?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.set("useCreateIndex", true);
-// making our user schema to save in mongoDB database
-const userSchema = new mongoose.Schema ({
-  email: String,
-  password: String,
-  googleId: String,
-});
-
-// making our user model using passportLocalMongoose
-userSchema.plugin(passportLocalMongoose);
-userSchema.plugin(findOrCreate);
-
-const User = new mongoose.model("User", userSchema);
-
-// using passport to create a stratergy
-passport.use(User.createStrategy());
-
-// Creates the session cookie for user
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-// Opens up the info in the cookie for identifying the user
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
-
-passport.use(new GoogleStrategy({
-  clientID: "347226813668-b7qq6253mhlrbfiddqc2qd9b9lg06stu.apps.googleusercontent.com",
-  clientSecret: "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",
-  callbackURL: "https://woofyverse.herokuapp.com/auth/google/woofyverse",
-  userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
-},
-function(accessToken, refreshToken, profile, cb) {
-  User.findOrCreate({ googleId: profile.id }, function (err, user) {
-    return cb(err, user);
-  });
-}
-));
-
-app.get("/auth/google",
-  passport.authenticate('google', { scope: ["profile"] })
-);
-
-app.get("/auth/google/woofyverse",
-  passport.authenticate('google', { failureRedirect: "/login" }),
-  function(req, res) {
-    // Successful authentication, redirect to adoopt page.
-    res.redirect("/");
-  });
-
 
 const postSchema ={
   dogName: {
@@ -190,78 +132,17 @@ const postSchema ={
 };
 const Post = mongoose.model("Post", postSchema);
 
-
-app.get("/login", function(req, res){
-  res.render("login");
-});
-
-app.post("/login", function(res,req){
-  const user= new User({
-    username: req.body.username,
-    password: req.body.password
-  })
-// this method comes from password
-  req.login(user, function(err){
-    if(err){
-      console.log(err)
-    }else{
-      passport.authenticate("local")(req,res,function(){
-        res.redirect('/')
-      })
-    }
-  })
-})
-
-app.get("/register", function(req, res){
-  res.render("register");
-});
-
-app.post("/register", function(req, res){
-  User.register({username: req.body.username}, req.body.password, function(err,user){
-    // If error or user already registered
-    if(err){
-      console.log(err);
-      res.render("register");
-      // If registered sucessfully
-    }else{
-      passport.authenticate("local")(req,res,function(){
-        res.redirect('/')
-      })
-    }
-  })
-  
-});
-
-app.use(
-  session({ 
-    cookie: {
-      path: '/',
-      httpOnly: false,
-      secure: false,
-      maxAge: null,
-    },
-  })
-)
-
-app.get('/logout', function(req, res, next) {
-  req.logout(function(err) {
-    if (err) { return next(err); }
-    res.redirect('/');
-  });
-});
-
 app.get("/", function(req, res){
-  // if user is registered and signedIn
-  if(req.isAuthenticated()){
+  if (req.oidc.isAuthenticated()) {
     Post.find({}, function(err, posts){
       res.render("home", {
         posts: posts,
         });
     }).sort({date:"desc"});
-    // If not then first login in order to access the compose page
-  }else{
-    res.redirect("/login")
+  } else {
+    res.redirect('/login')
   }
+  
 });
 
 app.post('/getPosts', (req,res)=>{
@@ -270,16 +151,9 @@ app.post('/getPosts', (req,res)=>{
 });
 
 
-app.get("/compose", function(req, res){
-  if(req.isAuthenticated()){
+app.get("/compose", requiresAuth(), function(req, res){
     res.render("compose");
-    // If not then first login in order to access the compose page
-  }else{
-    res.redirect("/login")
-  }
-   
 });
-
 
 app.post("/compose", function(req, res){
 
@@ -315,7 +189,7 @@ app.post("/compose", function(req, res){
   });
   });
  
-app.get("/posts/:postId", function(req, res){
+app.get("/posts/:postId", requiresAuth(), function(req, res){
 
 const requestedPostId = req.params.postId;
 
@@ -346,16 +220,10 @@ const requestedPostId = req.params.postId;
 
 });
 
-app.get('/donation', function(req, res){
-  // if user is registered and signedIn
-  if(req.isAuthenticated()){
+app.get('/donation', requiresAuth(), function(req, res){
     res.render('donation', {
       key: Publishable_Key
    })
-    // If not then first login in order to access the compose page
-  }else{
-    res.redirect("/login")
-  }
 })
 
 app.post('/donation', function(req, res){
@@ -388,8 +256,6 @@ app.post('/donation', function(req, res){
       res.send(err)       // If some error occurs
   });
 })
-
-
 
 setInterval(() => {
   http.get("https://woofyverse.herokuapp.com/");

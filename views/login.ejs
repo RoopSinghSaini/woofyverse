@@ -1,9 +1,9 @@
-<%- include("partials/loginHeader"); -%>
+<%- include("partials/second"); -%>
 <div class="container mt-5">
   <h1>Login</h1>
 
   <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-12">
       <div class="card">
         <div class="card-body">
 
@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <div class="col-sm-4">
+    <div class="col-sm">
       <div class="card">
         <div class="card-body">
           <a class="btn btn-block btn-social btn-google" href="/auth/google" role="button">
@@ -34,8 +34,21 @@
         </div>
       </div>
     </div>
+    
+    <div class="col-sm">
+      <div class="card">
+        <div class="card-body">
+          <a class="btn btn-block btn-social btn-google" href="/register" role="button">
+            <i class="fab fa-google"></i>
+            Sign Up with Google
+          </a>
+        </div>
+      </div>
+  </div>
 
   </div>
 </div>
+<br>
+<br>
 
 <%- include('partials/footer') %>
