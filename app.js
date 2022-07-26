@@ -12,6 +12,8 @@ const unlinkFile= util.promisify(fs.unlink);;
 const fileUpload = require('express-fileupload');
 const cloudinary = require('cloudinary').v2;
 const { auth, requiresAuth } = require('express-openid-connect');
+const favicon= require('serve-favicon');
+const path= require('path');
 
 // Using openid library for authentication and session management.
 const config = {
@@ -32,6 +34,7 @@ cloudinary.config({
 
 const port= process.env.PORT || 8000;
 const app = express();
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(auth(config));
 app.use(fileUpload({
   useTempFiles:true
@@ -47,7 +50,6 @@ const stripe= require('stripe')(Secret_key)
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
-
 // Connecting with our mongodb database
 mongoose.connect("mongodb+srv://arshroop:Asdfjkl123@cluster0.z4k2m.mongodb.net/?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.set("useCreateIndex", true);
@@ -56,6 +58,10 @@ const postSchema ={
   dogName: {
    type: String,
    required: true
+  },
+  breed:{
+    type: String,
+    required: true
   },
   date: {
     type:Date,
@@ -119,11 +125,11 @@ const postSchema ={
   },
   additionalOne: {
     type:String,
-    required: true
+    required: false
   },
   additionalTwo: {
     type:String,
-    required: true
+    required: false
   },
   imagePath: {
     type:String,
@@ -132,17 +138,42 @@ const postSchema ={
 };
 const Post = mongoose.model("Post", postSchema);
 
-app.get("/", function(req, res){
-  if (req.oidc.isAuthenticated()) {
-    Post.find({}, function(err, posts){
+app.get('/',function(req,res){
+if (req.oidc.isAuthenticated()) {
+var noMatch = null;
+    if(req.query.city || req.query.state) {
+        const city = new RegExp(escapeRegex(req.query.city), 'gi');
+        const state= new RegExp(escapeRegex(req.query.state), 'gi');
+        
+        Post.find({$and:[{state: state}, {city:city}]}, function(err, posts){
+           if(err){
+               console.log(err);
+           } else {
+              if(posts.length < 1) {
+                  noMatch = "No dogs up for adoption here, try some other place!";
+              }
+              res.render("home", {
+                posts: posts,
+                noMatch: noMatch,
+                });   
+           }
+          }).sort({date:"desc"});
+    } else {
+        // Get all posts from DB
+       Post.find({}, function(err, posts){
+        if(err){
+          console.log(err);
+        }else{
       res.render("home", {
         posts: posts,
+        noMatch: noMatch,
         });
+      }
     }).sort({date:"desc"});
-  } else {
+    }
+  }else {
     res.redirect('/login')
   }
-  
 });
 
 app.post('/getPosts', (req,res)=>{
@@ -162,6 +193,7 @@ app.post("/compose", function(req, res){
     console.log(result);
     const post = new Post({
       dogName: req.body.dogName,
+      breed: req.body.breed,
       date: req.body.postDate,
       dogAge: req.body.dogAge,
       shots: req.body.shots,
@@ -197,6 +229,7 @@ const requestedPostId = req.params.postId;
     res.render("post", {
       dogName: post.dogName,
       date: post.date,
+      breed: post.breed,
       ownerName: post.ownerName,
       ownerAddress: post.ownerAddress,
       ownerPhone: post.ownerPhone,
@@ -256,6 +289,10 @@ app.post('/donation', function(req, res){
       res.send(err)       // If some error occurs
   });
 })
+
+function escapeRegex(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
 
 setInterval(() => {
   http.get("https://woofyverse.herokuapp.com/");
