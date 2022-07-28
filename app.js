@@ -1,4 +1,6 @@
-//jshint esversion:6
+// Woofyverse Application: https://www.woofyverse.com/
+// Copyright (c) 2022 Woofyverse.
+// Adopt a buddy!
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -12,8 +14,10 @@ const unlinkFile= util.promisify(fs.unlink);;
 const fileUpload = require('express-fileupload');
 const cloudinary = require('cloudinary').v2;
 const { auth, requiresAuth } = require('express-openid-connect');
+const methodOverride= require("method-override")
 const favicon= require('serve-favicon');
 const path= require('path');
+const { log } = require("console");
 
 // Using openid library for authentication and session management.
 const config = {
@@ -50,6 +54,8 @@ const stripe= require('stripe')(Secret_key)
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
+app.use(methodOverride('_method'))
+
 // Connecting with our mongodb database
 mongoose.connect("mongodb+srv://arshroop:Asdfjkl123@cluster0.z4k2m.mongodb.net/?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.set("useCreateIndex", true);
@@ -57,83 +63,81 @@ mongoose.set("useCreateIndex", true);
 const postSchema ={
   dogName: {
    type: String,
-   required: true
+   
+   
   },
   breed:{
     type: String,
-    required: true
+    
   },
   date: {
     type:Date,
-    required: true
+    
   },
   ownerName: {
     type:String,
-    required: true
+    
   },
   shots: {
     type:String,
-    required: true
+    
   },
   dogAge: {
     type:String,
-    required: true
+    
   },
   spayed: {
     type:String,
-    required: true
+    
   },
   neutered: {
     type:String,
-    required: true
+    
   },
   vaccinated: {
     type:String,
-    required: true
-  },
+    
+     },
   kids: {
     type:String,
-    required: true
+    
   },
   cats: {
     type:String,
-    requied: true
+    
   },
   dogs: {
     type:String,
-    required: true
+    
   },
   state: {
     type:String,
-    required: true
+    
   },
   city: {
     type:String,
-    required: true
+    
   },
   gender: {
     type:String,
-    required: true
+    
   },
   ownerAddress: {
     type:String,
-    required: true
+    
   },
   ownerPhone: {
     type:Number,
-    required:true
+    
   },
   additionalOne: {
     type:String,
-    required: false
   },
   additionalTwo: {
     type:String,
-    required: false
   },
   imagePath: {
-    type:String,
-    required : true
+    type:String
 }
 };
 const Post = mongoose.model("Post", postSchema);
@@ -176,11 +180,6 @@ var noMatch = null;
   }
 });
 
-app.post('/getPosts', (req,res)=>{
-  let payload= req.body.payload;
-  console.log(payload);
-});
-
 
 app.get("/compose", requiresAuth(), function(req, res){
     res.render("compose");
@@ -198,7 +197,7 @@ app.post("/compose", function(req, res){
       dogAge: req.body.dogAge,
       shots: req.body.shots,
       ownerName: req.body.ownerName,
-      ownerAddress: req.body.ownerAddress,
+      ownerAddress: req.body.address,
       ownerPhone: req.body.ownerPhone,
       additionalOne: req.body.additionalOne,
       additionalTwo: req.body.additionalTwo,
@@ -209,18 +208,36 @@ app.post("/compose", function(req, res){
       kids: req.body.kids,
       cats: req.body.cats,
       dogs: req.body.dogs,
-      state: req.body.ownerState,
-      city: req.body.ownerCity,
+      state: req.body.state,
+      city: req.body.city,
       imagePath: result.url,
     });
-    post.save(function(err){
+    post.save(function(err,result){
       if (!err){
-          res.redirect("/");
+        const postId= result._id;
+        res.redirect("/thank-you/:"+postId);
       }
     });
   });
   });
  
+app.get('/thank-you/:postId', function(req, res){
+  const requestedPostId = req.params.postId;
+  Post.findOne({_id: requestedPostId}, function(err, post){
+    res.render("thank-you", {
+      dogName: post.dogName,
+      breed: post.breed,
+      ownerName: post.ownerName,
+      ownerPhone: post.ownerPhone,
+      additionalOne: post.additionalOne,
+      dogAge: post.dogAge,
+      gender:post.gender,
+      imagePath: post.imagePath,
+      _id: requestedPostId 
+    });
+  });
+});
+
 app.get("/posts/:postId", requiresAuth(), function(req, res){
 
 const requestedPostId = req.params.postId;
@@ -253,11 +270,90 @@ const requestedPostId = req.params.postId;
 
 });
 
+app.get('/:postId/edit', requiresAuth(), function (req, res) {
+  const requestedPostId = req.params.postId;
+  Post.findOne({_id: requestedPostId}, function(err, post){
+    res.render("edit", {
+      dogName: post.dogName,
+      date: post.date,
+      breed: post.breed,
+      ownerName: post.ownerName,
+      ownerAddress: post.ownerAddress,
+      ownerPhone: post.ownerPhone,
+      additionalOne: post.additionalOne,
+      additionalTwo: post.additionalTwo,
+      dogAge: post.dogAge,
+      spayed: post.spayed,
+      neutered: post.neutered,
+      vaccinated: post.vaccinated,
+      kids: post.kids,
+      shots: post.shots,
+      gender:post.gender,
+      cats: post.cats,
+      dogs: post.dogs,
+      state: post.state,
+      city: post.city,
+      imagePath: post.imagePath,
+      _id: requestedPostId
+    });
+  });
+
+});
+
+// route to handle updates
+app.put('/:postId/edit', function (req, res) {
+      const requestedPostId = req.params.postId;
+      dogName= req.body.dogName,
+      breed= req.body.breed,
+      ownerName= req.body.ownerName,
+      ownerAddress= req.body.address,
+      ownerPhone= req.body.ownerPhone,
+      additionalOne= req.body.additionalOne,
+      additionalTwo= req.body.additionalTwo,
+      dogAge= req.body.dogAge,
+      spayed= req.body.spayed,
+      neutered= req.body.neutered,
+      vaccinated= req.body.vaccinated,
+      kids= req.body.kids,
+      shots= req.body.shots,
+      gender=req.body.dogGender,
+      cats= req.body.cats,
+      dogs= req.body.dogs,
+      state= req.body.state,
+      city= req.body.city,
+      _id= requestedPostId,
+      
+  Post.updateOne({_id: requestedPostId}, {$set:{dogName:dogName,
+    city:city,state:state,dogs:dogs,kids:kids,cats:cats,gender:gender,
+    shots:shots,vaccinated:vaccinated,neutered:neutered,spayed:spayed,dogAge:dogAge,
+  additionalTwo:additionalTwo,additionalOne:additionalOne,ownerName:ownerName,ownerPhone:ownerPhone,
+  breed:breed,ownerAddress:ownerAddress}},{new:true},(err,data)=>{
+    if(err){
+      console.log(err)
+    }else{
+      console.log(data);
+      res.redirect('/')
+    }
+  })
+  })
+
+app.get('/delete/:postId',requiresAuth(),function(req,res){
+  Post.deleteOne({_id: req.params.postId},function(err){
+    if(err){
+      console.log(err);
+  }else{
+  res.redirect('/')
+  }
+});
+});
+
 app.get('/donation', requiresAuth(), function(req, res){
     res.render('donation', {
       key: Publishable_Key
    })
 })
+
+
 
 app.post('/donation', function(req, res){
 
@@ -289,6 +385,8 @@ app.post('/donation', function(req, res){
       res.send(err)       // If some error occurs
   });
 })
+
+
 
 function escapeRegex(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");

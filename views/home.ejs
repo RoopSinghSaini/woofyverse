@@ -39,16 +39,6 @@
     </div>
     <% } %>
 
-<script>
-  function sendData(e) {
-    fetch('getPosts', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({payload: e.value})
-    });
-  }
-</script>
-
 <div class="conatiner">
   <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4">
   <% posts.forEach(function(post){ %>
@@ -78,6 +68,7 @@
         </div>
         <br>
       <a href="/posts/<%=post._id%>" style="font-weight:400; font-size: 18px;" class="btn btn-primary">View Profile</a>
+
           </div>
       </div>
 <br>
