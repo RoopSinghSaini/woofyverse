@@ -341,8 +341,6 @@ app.get('/delete/:postId',requiresAuth(),function(req,res){
   Post.deleteOne({_id: req.params.postId},function(err){
     if(err){
       console.log(err);
-  }else{
-  res.redirect('/')
   }
 });
 });
