@@ -215,7 +215,7 @@ app.post("/compose", function(req, res){
     post.save(function(err,result){
       if (!err){
         const postId= result._id;
-        res.redirect("/thank-you/:"+postId);
+        res.redirect("/thank-you/"+postId);
       }
     });
   });
