@@ -19,7 +19,13 @@ const favicon= require('serve-favicon');
 const path= require('path');
 const { log } = require("console");
 
-let x = Math.floor(Math.random()*10000000);
+function randomNumber(max) {
+  return Math.floor(Math.random()*max);
+}
+
+let x = randomNumber(1000000000);
+console.log(x)
+
 // Using openid library for authentication and session management.
 const config = {
   authRequired: false,
@@ -64,7 +70,6 @@ mongoose.set("useCreateIndex", true);
 const postSchema ={
   dogName: {
    type: String,
-   
    
   },
   breed:{
@@ -227,6 +232,7 @@ app.get("/thank-you/"+x+"/:postId", function(req, res){
   Post.findOne({_id: requestedPostId}, function(err, post){
     res.render("thank-you", {
       dogName: post.dogName,
+      x: x,
       breed: post.breed,
       ownerName: post.ownerName,
       ownerPhone: post.ownerPhone,
@@ -239,7 +245,7 @@ app.get("/thank-you/"+x+"/:postId", function(req, res){
   });
 });
 
-app.get("/posts/:postId", requiresAuth(), function(req, res){
+app.get("/posts/:postId/", requiresAuth(), function(req, res){
 
 const requestedPostId = req.params.postId;
 
@@ -271,8 +277,9 @@ const requestedPostId = req.params.postId;
 
 });
 
-app.get('/:postId/edit', requiresAuth(), function (req, res) {
+app.get("/:postId/edit/"+x, requiresAuth(), function (req, res) {
   const requestedPostId = req.params.postId;
+  
   Post.findOne({_id: requestedPostId}, function(err, post){
     res.render("edit", {
       dogName: post.dogName,
@@ -338,7 +345,7 @@ app.put('/:postId/edit', function (req, res) {
   })
   })
 
-app.get('/delete/:postId',requiresAuth(),function(req,res){
+app.get('/delete/:postId/'+x,requiresAuth(),function(req,res){
   Post.deleteOne({_id: req.params.postId},function(err){
     if(err){
       console.log(err);
