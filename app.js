@@ -19,6 +19,7 @@ const favicon= require('serve-favicon');
 const path= require('path');
 const { log } = require("console");
 
+let x = Math.random()*10000000;
 // Using openid library for authentication and session management.
 const config = {
   authRequired: false,
@@ -215,13 +216,13 @@ app.post("/compose", function(req, res){
     post.save(function(err,result){
       if (!err){
         const postId= result._id;
-        res.redirect("/thank-you/"+postId);
+        res.redirect("/thank-you/"+postId/x);
       }
     });
   });
   });
- 
-app.get('/thank-you/:postId', function(req, res){
+
+app.get('/thank-you/:postId/'+x, function(req, res){
   const requestedPostId = req.params.postId;
   Post.findOne({_id: requestedPostId}, function(err, post){
     res.render("thank-you", {
