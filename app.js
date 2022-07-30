@@ -245,7 +245,6 @@ app.post("/compose", function(req, res){
   });
 
 app.get("/thank-you/:ranNum/:postId", function(req, res){
-  alert("Please save this link somewhere, you would require it in order to delete or edit your post in the future.")
   const requestedPostId = req.params.postId;
   const ranNum = req.params.ranNum;
   Post.findOne({_id: requestedPostId}, function(err, post){
@@ -262,6 +261,7 @@ app.get("/thank-you/:ranNum/:postId", function(req, res){
       _id: requestedPostId
     });
   });
+  alert("Please save this link somewhere, you would require it in order to delete or edit your post in the future.")
 });
 
 app.get("/posts/:postId/", requiresAuth(), function(req, res){
