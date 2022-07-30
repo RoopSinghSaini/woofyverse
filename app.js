@@ -157,6 +157,7 @@ imagePath: {
   type:String,
   required:true,
 },
+randomNumber:Number,
 };
 const Post = mongoose.model("Post", postSchema);
 
