@@ -153,10 +153,6 @@ const postSchema ={
   additionalTwo: {
     type:String,
   },
-  imagePathOne: {
-    type:String,
-    required:true,
-},
 imagePath: {
   type:String,
   required:true,
