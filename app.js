@@ -24,7 +24,7 @@ const { log } = require("console");
 
 
 // Using openid library for authentication and session management.
-/*
+
 const config = {
   authRequired: false,
   auth0Logout: true,
@@ -33,7 +33,8 @@ const config = {
   clientID: 'u7vJi1WJIxdNMLWN1LAyjleCfvFR4Sta',
   issuerBaseURL: 'https://dev-hri34pn2.us.auth0.com'
 };
-*/
+
+/*
 const config = {
   authRequired: false,
   auth0Logout: true,
@@ -42,6 +43,7 @@ const config = {
   clientID: 'u7vJi1WJIxdNMLWN1LAyjleCfvFR4Sta',
   issuerBaseURL: 'https://dev-hri34pn2.us.auth0.com'
 };
+*/
 
 
 // Using cloudinary library for hosting images path and then storing images path in mongodb database.
