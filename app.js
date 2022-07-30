@@ -19,12 +19,9 @@ const favicon= require('serve-favicon');
 const path= require('path');
 const { log } = require("console");
 
-function randomNumber(max) {
-  return Math.floor(Math.random()*max);
-}
 
-let x = randomNumber(1000000000);
-console.log(x)
+
+
 
 // Using openid library for authentication and session management.
 const config = {
@@ -70,71 +67,72 @@ mongoose.set("useCreateIndex", true);
 const postSchema ={
   dogName: {
    type: String,
+   required:true,
    
   },
   breed:{
     type: String,
-    
+    required:true,
   },
   date: {
     type:Date,
-    
+    required:true,
   },
   ownerName: {
     type:String,
-    
+    required:true,
   },
   shots: {
     type:String,
-    
+    required:true,
   },
   dogAge: {
     type:String,
-    
+    required:true,
   },
   spayed: {
     type:String,
-    
+    required:true,
   },
   neutered: {
     type:String,
-    
+    required:true,
   },
   vaccinated: {
     type:String,
-    
+    required:true,
      },
   kids: {
     type:String,
-    
+    required:true,
   },
   cats: {
     type:String,
-    
+    required:true,
   },
   dogs: {
     type:String,
-    
+    required:true,
   },
   state: {
     type:String,
-    
+    required:true,
   },
   city: {
     type:String,
-    
+    required:true,
   },
   gender: {
     type:String,
-    
+    required:true,
   },
   ownerAddress: {
     type:String,
-    
+    required:true,
   },
   ownerPhone: {
     type:Number,
-    
+    required:true,
   },
   additionalOne: {
     type:String,
@@ -143,8 +141,13 @@ const postSchema ={
     type:String,
   },
   imagePath: {
-    type:String
-}
+    type:String,
+    required:true,
+},
+randomNumber:{
+  type:Number,
+    required:true,
+},
 };
 const Post = mongoose.model("Post", postSchema);
 
@@ -186,17 +189,21 @@ var noMatch = null;
   }
 });
 
-
 app.get("/compose", requiresAuth(), function(req, res){
     res.render("compose");
 });
 
-app.post("/compose", function(req, res){
 
+
+
+app.post("/compose", function(req, res){
+  
   const file = req.files.imageOne;
   cloudinary.uploader.upload(file.tempFilePath,(err,result)=>{
+    
     console.log(result);
     const post = new Post({
+      randomNumber: Math.floor(Math.random()*1000000000000000),
       dogName: req.body.dogName,
       breed: req.body.breed,
       date: req.body.postDate,
@@ -221,18 +228,20 @@ app.post("/compose", function(req, res){
     post.save(function(err,result){
       if (!err){
         const postId= result._id;
-        res.redirect("/thank-you/"+x+"/"+postId);
+        const ranNum= result.randomNumber;
+        res.redirect("/thank-you/"+ranNum+"/"+postId);
       }
     });
   });
   });
 
-app.get("/thank-you/"+x+"/:postId", function(req, res){
+app.get("/thank-you/:ranNum/:postId", function(req, res){
   const requestedPostId = req.params.postId;
+  const ranNum = req.params.ranNum;
   Post.findOne({_id: requestedPostId}, function(err, post){
     res.render("thank-you", {
       dogName: post.dogName,
-      x: x,
+      ranNum:ranNum,
       breed: post.breed,
       ownerName: post.ownerName,
       ownerPhone: post.ownerPhone,
@@ -240,7 +249,7 @@ app.get("/thank-you/"+x+"/:postId", function(req, res){
       dogAge: post.dogAge,
       gender:post.gender,
       imagePath: post.imagePath,
-      _id: requestedPostId 
+      _id: requestedPostId
     });
   });
 });
@@ -271,13 +280,13 @@ const requestedPostId = req.params.postId;
       state: post.state,
       city: post.city,
       imagePath: post.imagePath,
-      _id: requestedPostId 
+      _id: requestedPostId
     });
   });
 
 });
 
-app.get("/:postId/edit/"+x, requiresAuth(), function (req, res) {
+app.get("/:postId/edit/:ranNum", requiresAuth(), function (req, res) {
   const requestedPostId = req.params.postId;
   
   Post.findOne({_id: requestedPostId}, function(err, post){
@@ -345,7 +354,7 @@ app.put('/:postId/edit', function (req, res) {
   })
   })
 
-app.get('/delete/:postId/'+x,requiresAuth(),function(req,res){
+app.get("/delete/:postId/:ranNum",requiresAuth(),function(req,res){
   Post.deleteOne({_id: req.params.postId},function(err){
     if(err){
       console.log(err);
@@ -354,6 +363,8 @@ app.get('/delete/:postId/'+x,requiresAuth(),function(req,res){
   }
 });
 });
+
+
 
 app.get('/donation', requiresAuth(), function(req, res){
     res.render('donation', {

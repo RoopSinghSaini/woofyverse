@@ -6,11 +6,11 @@
     <form class="" action="/<%=_id%>/edit?_method=PUT" method="POST" enctype="multipart/form-data">
       <div class="form-group">
         <label class="required">Name</label>
-        <input value="<%=dogName%>" class="form-control" type="text" name="dogName" >
+        <input value="<%=dogName%>" class="form-control" type="text" name="dogName" required>
         <label  class="required">Breed</label>
-        <input  value="<%=breed%>" class="form-control" type="text" name="breed" >
+        <input  value="<%=breed%>" class="form-control" type="text" name="breed" required>
          <label class="required">Age</label>
-        <select class="form-control " name = "dogAge" >
+        <select class="form-control " name = "dogAge" required>
           <option value="<%=dogAge%>"  selected ><%=dogAge%></option>
           <option value = "Puppy">Puppyhood</option>
           <option value = "Adolescence">Adolescence</option>
@@ -19,49 +19,49 @@
        </select>
        
        <label class="required">Gender</label>
-       <select class="form-control " name = "dogGender" >
+       <select class="form-control " name = "dogGender" required>
         <option value="<%=gender%>" selected ><%=gender%></option>
          <option value = "Male">Male</option>
          <option value = "Female">Female</option>
       </select>
       <label class="required">Spayed</label>
-       <select class="form-control " name = "spayed" >
+       <select class="form-control " name = "spayed" required>
         <option  value="<%=spayed%>" selected ><%=spayed%></option>
          <option value = "Yes">Yes</option>
          <option value = "No">No</option>
       </select>
       <label class="required">Neutered</label>
-      <select class="form-control " name = "neutered" >
+      <select class="form-control " name = "neutered" required>
         <option value="<%=neutered%>" selected ><%=neutered%></option>
         <option value = "Yes">Yes</option>
         <option value = "No">No</option>
      </select>
      <label class="required">Vaccinated</label>
-     <select class="form-control " name = "vaccinated" >
+     <select class="form-control " name = "vaccinated" required>
       <option value="<%=vaccinated%>" selected><%=vaccinated%></option>
        <option value = "Yes">Yes</option>
        <option value = "No">No</option>
     </select>
     <label class="required">Good with Kids</label>
-       <select class="form-control " name = "kids" >
+       <select class="form-control " name = "kids" required>
         <option value="<%=kids%>" selected ><%=kids%></option>
          <option value = "Yes">Yes</option>
          <option value = "No">No</option>
       </select>
       <label class="required">Good with Cats</label>
-      <select class="form-control " name = "cats" >
+      <select class="form-control " name = "cats" required>
         <option value="<%=cats%>" selected ><%=cats%></option>
         <option value = "Yes">Yes</option>
         <option value = "No">No</option>
      </select>
      <label class="required">Good with Dogs</label>
-       <select class="form-control " name = "dogs" >
+       <select class="form-control " name = "dogs" required>
         <option value="<%=dogs%>" selected ><%=dogs%></option>
          <option value = "Yes">Yes</option>
          <option value = "No">No</option>
       </select>
       <label class="required">Shots up to Date</label>
-      <select class="form-control " name = "shots" >
+      <select class="form-control " name = "shots" required>
        <option value="<%=shots%>" selected ><%=shots%></option>
         <option value = "Yes">Yes</option>
         <option value = "No">No</option>
@@ -71,15 +71,15 @@
 
         <h1>Owner Details</h1>
         <label class="required">Name</label>
-        <input value="<%=ownerName%>"  class="form-control " type="text" name="ownerName" >
+        <input value="<%=ownerName%>"  class="form-control " type="text" name="ownerName" required>
         <label>Address</label>
-        <input value="<%=ownerAddress%>" type="text" name="address " class="form-control" >
+        <input value="<%=ownerAddress%>" type="text" name="address" class="form-control" required>
         <label class="required">State</label>
-        <input value="<%=state%>" type="text" name="state " class="form-control" >
+        <input value="<%=state%>" type="text" name="state" class="form-control" required>
         <label class="required">City</label>
-        <input value="<%=city%>" type="text" name="city" class="form-control " >
+        <input value="<%=city%>" type="text" name="city" class="form-control " required>
         <label class="required">Phone</label>
-        <input value="<%=ownerPhone%>" type="number" name="ownerPhone" class="form-control " >
+        <input value="<%=ownerPhone%>" type="number" name="ownerPhone" class="form-control " required>
 
         <br>
 
