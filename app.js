@@ -293,8 +293,6 @@ const requestedPostId = req.params.postId;
       _id: requestedPostId
     });
   });
-  alert("Please save this url somewhere, you might need it in order to edit or delete your posts in the future")
-
 });
 
 app.get("/:postId/edit/:ranNum", requiresAuth(), function (req, res) {
