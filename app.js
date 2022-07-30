@@ -238,6 +238,7 @@ app.post("/compose", function(req, res){
       if (!err){
         const postId= result._id;
         const ranNum= result.randomNumber;
+        alert("Please save this link somewhere, you would require it in order to delete or edit your post in the future.")
         res.redirect("/thank-you/"+ranNum+"/"+postId);
       }
     });
