@@ -261,7 +261,6 @@ app.get("/thank-you/:ranNum/:postId", function(req, res){
       _id: requestedPostId
     });
   });
-  alert("Please save this link somewhere, you would require it in order to delete or edit your post in the future.")
 });
 
 app.get("/posts/:postId/", requiresAuth(), function(req, res){
