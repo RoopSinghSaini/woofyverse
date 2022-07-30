@@ -6,7 +6,7 @@
     <form class="" action="/compose" method="post" enctype="multipart/form-data">
       <div class="form-group">
         <label class="required">Name</label>
-        <input  class="form-control" type="text" name="dogName" required>
+        <input autofocus class="form-control" type="text" name="dogName" required>
         <label class="required">Breed</label>
         <input  class="form-control" type="text" name="breed" required>
         <label class="required">Date</label>
@@ -68,8 +68,8 @@
         <option value = "Yes">Yes</option>
         <option value = "No">No</option>
      </select>
-      <label class="required" for="files" >Select some images of the Dog</label>
-      <input id="imageOne" name="imageOne" class="form-control" type="file" required>
+      <label class="required" for="files" >Select some images of the Dog (All 3 are required)</label>
+      <input  accept=".jpg, .png" id="imageOne" name="imageOne" class="form-control" type="file" required>
         <br>
 
         <h1>Owner Details</h1>
@@ -78,11 +78,11 @@
         <label class="required">Address</label>
         <input type="text" name="address" class="form-control" required>
         <label class="required">State</label>
-        <input type="text" name="state" class="form-control" required>
+        <input  spellcheck="true" type="text" name="state" class="form-control" required>
         <label class="required">City</label>
-        <input type="text" name="city" class="form-control " required>
+        <input spellcheck="true" type="text" name="city" class="form-control " required>
         <label class="required">Phone</label>
-        <input type="number" name="ownerPhone"  class="form-control" required>
+        <input inputmode="tel" type="number" name="ownerPhone"  class="form-control" required>
 
         <br>
 

@@ -6,7 +6,7 @@
     <form class="" action="/<%=_id%>/edit?_method=PUT" method="POST" enctype="multipart/form-data">
       <div class="form-group">
         <label class="required">Name</label>
-        <input value="<%=dogName%>" class="form-control" type="text" name="dogName" required>
+        <input autofocus value="<%=dogName%>" class="form-control" type="text" name="dogName" required>
         <label  class="required">Breed</label>
         <input  value="<%=breed%>" class="form-control" type="text" name="breed" required>
          <label class="required">Age</label>
@@ -75,11 +75,11 @@
         <label>Address</label>
         <input value="<%=ownerAddress%>" type="text" name="address" class="form-control" required>
         <label class="required">State</label>
-        <input value="<%=state%>" type="text" name="state" class="form-control" required>
+        <input  spellcheck="true" value="<%=state%>" type="text" name="state" class="form-control" required>
         <label class="required">City</label>
-        <input value="<%=city%>" type="text" name="city" class="form-control " required>
+        <input spellcheck="true" value="<%=city%>" type="text" name="city" class="form-control " required>
         <label class="required">Phone</label>
-        <input value="<%=ownerPhone%>" type="number" name="ownerPhone" class="form-control " required>
+        <input inputmode="tel" value="<%=ownerPhone%>" type="number" name="ownerPhone" class="form-control " required>
 
         <br>
 
