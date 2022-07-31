@@ -18,13 +18,11 @@ const methodOverride= require("method-override")
 const favicon= require('serve-favicon');
 const path= require('path');
 const { log } = require("console");
-
-
-
+const axios = require("axios");
 
 
 // Using openid library for authentication and session management.
-
+/*
 const config = {
   authRequired: false,
   auth0Logout: true,
@@ -34,7 +32,7 @@ const config = {
   issuerBaseURL: 'https://dev-hri34pn2.us.auth0.com'
 };
 
-/*
+*/
 const config = {
   authRequired: false,
   auth0Logout: true,
@@ -43,7 +41,7 @@ const config = {
   clientID: 'u7vJi1WJIxdNMLWN1LAyjleCfvFR4Sta',
   issuerBaseURL: 'https://dev-hri34pn2.us.auth0.com'
 };
-*/
+
 
 
 // Using cloudinary library for hosting images path and then storing images path in mongodb database.
@@ -414,11 +412,85 @@ app.post('/donation', function(req, res){
   });
 })
 
+app.get('/breed',function(req, res){
+  var noMatch = null;
+  if(req.query.breed) {
+    const breed = new RegExp(escapeRegex(req.query.breed), 'gi');
+    const breedAPI=  new RegExp(spaceReplace(req.query.breed));
+
+    const options = {
+      method: 'GET',
+      url: 'https://dog-breeds2.p.rapidapi.com/dog_breeds/breed'+breedAPI,
+      headers: {
+        'X-RapidAPI-Key': 'aae55d79c0mshe3f425807cb2a6ep1b82a0jsnb5e979ddc835',
+        'X-RapidAPI-Host': 'dog-breeds2.p.rapidapi.com'
+      }
+    };
+    
+    Post.find({breed:breed}, function(err, posts){
+       if(err){
+           console.log(err);
+       } else {
+          if(posts.length < 1) {
+              noMatch = "No dogs matching the breed are up for adoption, try some other breed!";
+          }
+          axios.request(options).then(function send (response) {
+            const data= response.data
+            const breed = response.data[0].breed
+            const origin= response.data[0].origin
+            const wikipedia= response.data[0].url
+            const image= response.data[0].img
+            const height= response.data[0].meta.height
+            const weight= response.data[0].meta.weight
+            const coat= response.data[0].meta.coat
+            const life= response.data[0].meta.life_span
+            const nickname= response.data[0].meta.common_nicknames
+            const color= response.data[0].meta.color
+            res.render("breed", {
+              posts: posts,
+              noMatch: noMatch,
+              breed: breed,
+              origin: origin,
+              wikipedia: wikipedia,
+              image: image,
+              height: height,
+              weight: weight,
+              coat: coat,
+              life: life,
+              nickname: nickname,
+              color: color,
+              });   
+         }).catch(function (error) {
+          console.error(error);
+        });
+         
+       }
+      }).sort({date:"desc"});
+} else {
+    // Get all posts from DB
+   Post.find({}, function(err, posts){
+    if(err){
+      console.log(err);
+    }else{
+        res.render("breed", {
+          posts: posts,
+          noMatch: noMatch,
+          breed: null,
+          });   
+  }
+}).sort({date:"desc"});
+}
+  })
+
 
 
 function escapeRegex(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 };
+
+function spaceReplace(text) {
+  return text.replace(/\s+/g, '%20');
+}
 
 setInterval(() => {
   http.get("https://woofyverse.herokuapp.com/");

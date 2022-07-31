@@ -2,7 +2,7 @@
 <%- include("partials/second"); -%>
 
 <div class="container">
-    <h1 style="font-weight: 700; font-size:36px; text-align: center;">Adopt <%=dogName%></h1>
+    <h1 id="changeHeading" style="font-weight: 700; font-size:36px; text-align: center;">Adopt <%=dogName%></h1>
    <% var options = { year: 'numeric', month: 'long', day: 'numeric' }; %>
    <p style="font-family: IBM Plex Sans, sans-serif; font-weight:400; font-size: 16px;"><%=date.toLocaleDateString('en-us', options)%></p>
 
