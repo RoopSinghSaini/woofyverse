@@ -1,0 +1,67 @@
+
+<%- include("partials/second"); -%>
+
+<div class="container">
+    <h1 id="changeHeading" style="font-weight: 700; font-size:36px; text-align: center;">OHHO!  <%=dogName%> is already Adopted</h1>
+   <% var options = { year: 'numeric', month: 'long', day: 'numeric' }; %>
+   <p style="font-family: IBM Plex Sans, sans-serif; font-weight:400; font-size: 16px;"><%=date.toLocaleDateString('en-us', options)%></p>
+
+<span  style="font-weight: 300; font-size:20px;"><%-additionalTwo%></span>
+<br>
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        
+       <img height="700px"  src="<%=imagePath%>" class="d-block w-100" alt="imageOne"> 
+           </div>
+      <div class="carousel-item">
+        <img height="700px"  src="<%=imagePath%>" class="d-block w-100" alt="imageTwo"> 
+      </div>
+      <div class="carousel-item">
+        <img height="700px" src="<%=imagePath%>" class="d-block w-100" alt="imageThree"> 
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+   <div class="aboutMe">
+
+
+    <h2 style="font-weight: 700; font-size: 29px; text-align: center;">About Me</h2>
+</div>
+<div> 
+    <p style="font-weight: 600; font-size:20px;">Breed <span style="font-weight: 300; font-size:
+    20px;"><%=breed%> </span></p>
+    <p style="font-weight: 600; font-size:20px;">Age <span style="font-weight: 300; font-size:20px;"> <%=dogAge%></span></p>
+    <p style="font-weight: 600; font-size:20px;">Gender <span style="font-weight: 300; font-size:20px;"> <%=gender%></span></p>
+</div>
+
+<div class="">
+    <p style="font-weight: 600; font-size:20px;">Vaccinated <span style="font-weight: 300; font-size:20px;"> <%=vaccinated%></span></p>
+    <p style="font-weight: 600; font-size:20px;">Spayed <span style="font-weight: 300; font-size:20px;"> <%=spayed%></span></p>
+    <p style="font-weight: 600; font-size:20px;">Neutered <span style="font-weight: 300; font-size:20px;"> <%=neutered%></span></p> 
+
+</div>
+<div>
+    <p style="font-weight: 600; font-size:20px;">Good with Cats <span style="font-weight: 300; font-size:20px;"> <%=cats%></span></p> 
+    <p style="font-weight: 600; font-size:20px;">Good with Dogs <span style="font-weight: 300; font-size:20px;"> <%=dogs%></span></p>
+    <p style="font-weight: 600; font-size:20px;">shots up to Date <span style="font-weight: 300; font-size:20px;"> <%=shots%></span></p>   
+</div>
+
+</div>
+<br>
+<br>
+<br>
+
+<%- include("partials/footer"); -%>

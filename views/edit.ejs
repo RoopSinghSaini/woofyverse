@@ -88,6 +88,13 @@
         <textarea id="aTag"  class="form-contro" name="additionalOne" rows="5" cols="30" ><%=additionalOne%></textarea>
         <label>Additional info about the pet</label>
         <textarea id="bTag" class="form-control" name="additionalTwo" rows="5" cols="30" ><%=additionalTwo%></textarea>
+        <br>
+        <label class="required">Adopted</label>
+        <select class="form-control" name = "adopted" required>
+         <option value="<%=adopted%>" selected ><%=adopted%></option>
+          <option value = true>Yes</option>
+          <option value = false>No</option>
+       </select>
       </div>
       <button class="btn btn-success" type="submit" name="button">Update</button>
     </form>

@@ -31,8 +31,8 @@ const config = {
   clientID: 'u7vJi1WJIxdNMLWN1LAyjleCfvFR4Sta',
   issuerBaseURL: 'https://dev-hri34pn2.us.auth0.com'
 };
-
 */
+
 const config = {
   authRequired: false,
   auth0Logout: true,
@@ -84,6 +84,10 @@ const postSchema ={
   breed:{
     type: String,
     required:true,
+  },
+  adopted:{
+    type: Boolean,
+    required: true,
   },
   date: {
     type:Date,
@@ -166,7 +170,7 @@ var noMatch = null;
         const city = new RegExp(escapeRegex(req.query.city), 'gi');
         const state= new RegExp(escapeRegex(req.query.state), 'gi');
         
-        Post.find({$and:[{state: state}, {city:city}]}, function(err, posts){
+        Post.find({$and:[{state: state}, {city:city},{adopted:false}]}, function(err, posts){
            if(err){
                console.log(err);
            } else {
@@ -181,7 +185,7 @@ var noMatch = null;
           }).sort({date:"desc"});
     } else {
         // Get all posts from DB
-       Post.find({}, function(err, posts){
+       Post.find({adopted:false}, function(err, posts){
         if(err){
           console.log(err);
         }else{
@@ -197,12 +201,21 @@ var noMatch = null;
   }
 });
 
+app.get('/adopted', function(req, res) {
+  Post.find({adopted:true}, function(err, posts){
+    if(err){
+        console.log(err);
+    } else {
+       res.render("adopted", {
+         posts: posts,
+         });   
+    }
+   }).sort({date:"desc"});
+})
+
 app.get("/compose", requiresAuth(), function(req, res){
     res.render("compose");
 });
-
-
-
 
 app.post("/compose", function(req, res){
   
@@ -216,6 +229,7 @@ app.post("/compose", function(req, res){
       breed: req.body.breed,
       date: req.body.postDate,
       dogAge: req.body.dogAge,
+      adopted: false,
       shots: req.body.shots,
       ownerName: req.body.ownerName,
       ownerAddress: req.body.address,
@@ -256,6 +270,7 @@ app.get("/thank-you/:ranNum/:postId", function(req, res){
       additionalOne: post.additionalOne,
       dogAge: post.dogAge,
       gender:post.gender,
+      adopted: post.adopted,
       imagePath: post.imagePath,
       _id: requestedPostId
     });
@@ -293,6 +308,32 @@ const requestedPostId = req.params.postId;
   });
 });
 
+app.get("/adopted/posts/:postId/", requiresAuth(), function(req, res){
+
+  const requestedPostId = req.params.postId;
+  
+    Post.findOne({_id: requestedPostId}, function(err, post){
+      res.render("adopted-post", {
+        dogName: post.dogName,
+        date: post.date,
+        breed: post.breed,
+        additionalOne: post.additionalOne,
+        additionalTwo: post.additionalTwo,
+        dogAge: post.dogAge,
+        spayed: post.spayed,
+        neutered: post.neutered,
+        vaccinated: post.vaccinated,
+        kids: post.kids,
+        shots: post.shots,
+        gender:post.gender,
+        cats: post.cats,
+        dogs: post.dogs,
+        imagePath: post.imagePath,
+        _id: requestedPostId
+      });
+    });
+  });
+
 app.get("/:postId/edit/:ranNum", requiresAuth(), function (req, res) {
   const requestedPostId = req.params.postId;
   
@@ -311,6 +352,7 @@ app.get("/:postId/edit/:ranNum", requiresAuth(), function (req, res) {
       neutered: post.neutered,
       vaccinated: post.vaccinated,
       kids: post.kids,
+      adopted: post.adopted,
       shots: post.shots,
       gender:post.gender,
       cats: post.cats,
@@ -328,6 +370,7 @@ app.get("/:postId/edit/:ranNum", requiresAuth(), function (req, res) {
 app.put('/:postId/edit', function (req, res) {
       const requestedPostId = req.params.postId;
       dogName= req.body.dogName,
+      adopted= req.body.adopted,
       breed= req.body.breed,
       ownerName= req.body.ownerName,
       ownerAddress= req.body.address,
@@ -348,7 +391,7 @@ app.put('/:postId/edit', function (req, res) {
       _id= requestedPostId,
       
   Post.updateOne({_id: requestedPostId}, {$set:{dogName:dogName,
-    city:city,state:state,dogs:dogs,kids:kids,cats:cats,gender:gender,
+    city:city,state:state,adopted:adopted,dogs:dogs,kids:kids,cats:cats,gender:gender,
     shots:shots,vaccinated:vaccinated,neutered:neutered,spayed:spayed,dogAge:dogAge,
   additionalTwo:additionalTwo,additionalOne:additionalOne,ownerName:ownerName,ownerPhone:ownerPhone,
   breed:breed,ownerAddress:ownerAddress}},{new:true},(err,data)=>{
@@ -361,6 +404,7 @@ app.put('/:postId/edit', function (req, res) {
   })
   })
 
+  /*
 app.get("/delete/:postId/:ranNum",requiresAuth(),function(req,res){
   Post.deleteOne({_id: req.params.postId},function(err){
     if(err){
@@ -371,7 +415,7 @@ app.get("/delete/:postId/:ranNum",requiresAuth(),function(req,res){
 });
 });
 
-
+*/
 
 app.get('/donation', requiresAuth(), function(req, res){
     res.render('donation', {
