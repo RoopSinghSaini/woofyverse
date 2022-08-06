@@ -2,6 +2,10 @@
 
 <br>
 <div class="container">
+  <center><h1 style="
+    font-weight: 700; font-size:
+    55px; text-align: center;
+    line-height: 1.2;">Search By Breed</h1></center><br>
   
 <% if(noMatch !== null) { %>
     <center>
@@ -11,7 +15,7 @@
     <p>
       <form action="/breed" method="GET" class="form-inline">
         <div class="form-group">
-          <select style="width: 400px; height: 40px" name="breed" id="breed_select" class="custom-select breed">
+          <select autofocus style="width: 400px; height: 35px" name="breed" id="breed_select" class="custom-select breed form-control">
             <option selected hidden disabled >Select a Breed
             </option>
             <option id="0">Indian pariah dog</option>
@@ -22,7 +26,7 @@
     </p>
   </center>
   <div>
-    <img style="float: right; margin-top: 150px;" src="<%=image%>" alt="dog image">
+    <img style="float: right; height:300px; padding-right: 20px; margin-top: 150px;" src="<%=image%>" alt="dog image">
   </div>
   <div class="jumbotron">
     <h1><%=breed%></h1>
@@ -43,7 +47,7 @@
     <p>
       <form action="/breed" method="GET" class="form-inline">
         <div class="form-group">
-          <select style="width: 400px; height: 40px" name="breed" id="breed_select" class="custom-select breed">
+          <select autofocus style="width: 400px; height: 35px" name="breed" id="breed_select" class="custom-select breed form-control">
             <option selected hidden disabled >Select a Breed
             </option>
             <option id="0">Indian pariah dog</option>
@@ -56,7 +60,7 @@
   </center>
   <br><br>
   <div>
-    <img style="float: right; margin-top: 150px;" src="<%=image%>" alt="dog image">
+    <img style="float: right; height:300px; padding-right: 20px; margin-top: 150px;" src="<%=image%>" alt="dog image">
   </div>
   <div class="jumbotron">
     <h1><%=breed%></h1>

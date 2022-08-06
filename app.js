@@ -1,4 +1,4 @@
-// Woofyverse Application: https://www.woofyverse.com/
+// Woofyverse Application: https://www.woofyverse.herokuapp.com/
 // Copyright (c) 2022 Woofyverse.
 // Adopt a buddy!
 
@@ -19,6 +19,7 @@ const favicon= require('serve-favicon');
 const path= require('path');
 const { log } = require("console");
 const axios = require("axios");
+const { range } = require("lodash");
 
 
 // Using openid library for authentication and session management.
@@ -41,8 +42,8 @@ const config = {
   clientID: 'u7vJi1WJIxdNMLWN1LAyjleCfvFR4Sta',
   issuerBaseURL: 'https://dev-hri34pn2.us.auth0.com'
 };
-*/
 
+*/
 
 // Using cloudinary library for hosting images path and then storing images path in mongodb database.
 cloudinary.config({ 
@@ -61,9 +62,9 @@ app.use(fileUpload({
 
 app.set('view engine', 'ejs');
 
-var Publishable_Key=process.env.CLIENT_ID
+var Publishable_Key='pk_test_51LGKXNSBGKec0tIDWdLF8rK7eHBC4ePrp2IhZgyLQalMzwfFJy601wgs3pBnLOWwIqVPd8BT5bOYwnm61FwUYT9D00rhrPFyNX'
 
-var Secret_key=process.env.CLIENT_SECRET
+var Secret_key='sk_test_51LGKXNSBGKec0tIDvKV8DRGBCaMa4lYqAEM0XDki3sB3MWS9ypvwWFRAPMC1y6yivAzysUetnboxwDAYc6LiHZy600UnKJYTHC'
 
 const stripe= require('stripe')(Secret_key)
 
@@ -163,9 +164,53 @@ randomNumber:Number,
 };
 const Post = mongoose.model("Post", postSchema);
 
+app.get('/news',function (req,res) {
+
+  const axios = require("axios");
+
+const options = {
+  method: 'GET',
+  url: 'https://daily-dog-news.p.rapidapi.com/news',
+  headers: {
+    'X-RapidAPI-Key': 'aae55d79c0mshe3f425807cb2a6ep1b82a0jsnb5e979ddc835',
+    'X-RapidAPI-Host': 'daily-dog-news.p.rapidapi.com'
+  }
+};
+
+axios.request(options).then(function (response) {
+  const news= response.data;
+
+  var datas= []
+  for (var index = 0; index < response.data.length; index++) {
+    datas.push(news[index])
+  }
+  console.log(datas);
+  res.render('news',{
+    datas:datas
+  })
+	
+}).catch(function (error) {
+	console.error(error);
+});
+})
+
 app.get('/',function(req,res){
 if (req.oidc.isAuthenticated()) {
+  const axios = require("axios");
+
+const options = {
+  method: 'GET',
+  url: 'https://dog-facts2.p.rapidapi.com/facts',
+  headers: {
+    'X-RapidAPI-Key': 'aae55d79c0mshe3f425807cb2a6ep1b82a0jsnb5e979ddc835',
+    'X-RapidAPI-Host': 'dog-facts2.p.rapidapi.com'
+  }
+};
+
+
 var noMatch = null;
+
+
     if(req.query.city || req.query.state) {
         const city = new RegExp(escapeRegex(req.query.city), 'gi');
         const state= new RegExp(escapeRegex(req.query.state), 'gi');
@@ -177,10 +222,18 @@ var noMatch = null;
               if(posts.length < 1) {
                   noMatch = "No dogs up for adoption here, try some other place!";
               }
+              axios.request(options).then(function (response) {
+                const fact=response.data.facts[0];
+                console.log(fact);
+            
               res.render("home", {
                 posts: posts,
                 noMatch: noMatch,
+                fact:fact,
                 });   
+              }).catch(function (error) {
+                console.error(error);
+              });
            }
           }).sort({date:"desc"});
     } else {
@@ -189,10 +242,18 @@ var noMatch = null;
         if(err){
           console.log(err);
         }else{
-      res.render("home", {
-        posts: posts,
-        noMatch: noMatch,
-        });
+          axios.request(options).then(function (response) {
+            const fact=response.data.facts[0];
+            console.log(fact);
+        
+          res.render("home", {
+            posts: posts,
+            noMatch: noMatch,
+            fact:fact,
+            });   
+          }).catch(function (error) {
+            console.error(error);
+          });
       }
     }).sort({date:"desc"});
     }
@@ -404,7 +465,7 @@ app.put('/:postId/edit', function (req, res) {
   })
   })
 
-  /*
+  
 app.get("/delete/:postId/:ranNum",requiresAuth(),function(req,res){
   Post.deleteOne({_id: req.params.postId},function(err){
     if(err){
@@ -415,7 +476,7 @@ app.get("/delete/:postId/:ranNum",requiresAuth(),function(req,res){
 });
 });
 
-*/
+
 
 app.get('/donation', requiresAuth(), function(req, res){
     res.render('donation', {
@@ -442,7 +503,7 @@ app.post('/donation', function(req, res){
   .then((customer) => {
 
       return stripe.charges.create({
-          amount: 25,     // Charing Rs 25
+          amount: 100,     // Charing Rs 25
           description: 'Woofyverse animal rescue',
           currency: 'INR',
           customer: customer.id
@@ -490,7 +551,7 @@ app.get('/breed',function(req, res){
             const life= response.data[0].meta.life_span
             const nickname= response.data[0].meta.other_names
             const color= response.data[0].meta.colour
-            console.log(data);
+            console.log(response.data);
             res.render("breed", {
               posts: posts,
               noMatch: noMatch,

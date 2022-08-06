@@ -1,0 +1,30 @@
+<%- include("partials/second"); -%>
+
+<br>
+<div class="container">
+
+    <center><h1 style="
+        font-weight: 700; font-size:
+        55px; text-align: center;
+        line-height: 1.2;">Dog News Around The World</h1></center><br>
+
+   <% datas.forEach(function(data) { %>
+    
+   <div class="jumbotron">
+
+          <h2 class="animate-charcter"> <a href="<%=data.url%>" target="_blank"><%=data.title%></a> </h2>
+        
+  
+    <p>Source: <%=data.source%></p>
+    
+        
+   </div>
+   <% }) %>
+  
+ 
+   
+       
+    </div>
+</div>
+ 
+<%- include("partials/footer"); -%>
