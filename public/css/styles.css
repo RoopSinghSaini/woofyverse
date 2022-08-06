@@ -19,12 +19,10 @@ body{
 a:hover {
     text-decoration: none;
 }
-
 .footer {
-
 	text-align: center;
 	width: 100%;
-	height: 40px;
+	height: 60px;
   position: absolute;
 	background-color:
   rgb(26, 178, 255);
@@ -33,12 +31,12 @@ a:hover {
 }
 
 .footer p {
-	padding-top: 40px;
+  
+	padding-top: 20px;
 	font-size: 30px;
   color: rgb(250, 249, 246);
   font-family: IBM Plex Sans, sans-serif; font-weight:400; font-size: 16px;
 }
-
 .fa-brands, .fa-solid{
   padding-left: 3px;
   padding-right: 3px;

@@ -471,7 +471,7 @@ app.get('/breed',function(req, res){
       }
     };
     
-    Post.find({breed:breed}, function(err, posts){
+    Post.find({$and:[{breed:breed},{adopted:false}]}, function(err, posts){
        if(err){
            console.log(err);
        } else {
@@ -488,8 +488,9 @@ app.get('/breed',function(req, res){
             const weight= response.data[0].meta.weight
             const coat= response.data[0].meta.coat
             const life= response.data[0].meta.life_span
-            const nickname= response.data[0].meta.common_nicknames
-            const color= response.data[0].meta.color
+            const nickname= response.data[0].meta.other_names
+            const color= response.data[0].meta.colour
+            console.log(data);
             res.render("breed", {
               posts: posts,
               noMatch: noMatch,
@@ -512,17 +513,7 @@ app.get('/breed',function(req, res){
       }).sort({date:"desc"});
 } else {
     // Get all posts from DB
-   Post.find({}, function(err, posts){
-    if(err){
-      console.log(err);
-    }else{
-        res.render("breed", {
-          posts: posts,
-          noMatch: noMatch,
-          breed: null,
-          });   
-  }
-}).sort({date:"desc"});
+        res.redirect('/breed?breed=Indian+pariah+dog')
 }
   })
 
