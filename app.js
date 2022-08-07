@@ -42,8 +42,8 @@ const config = {
   clientID: 'u7vJi1WJIxdNMLWN1LAyjleCfvFR4Sta',
   issuerBaseURL: 'https://dev-hri34pn2.us.auth0.com'
 };
-
 */
+
 
 // Using cloudinary library for hosting images path and then storing images path in mongodb database.
 cloudinary.config({ 
@@ -184,9 +184,11 @@ axios.request(options).then(function (response) {
   for (var index = 0; index < response.data.length; index++) {
     datas.push(news[index])
   }
+  const length= response.data.length
   console.log(datas);
   res.render('news',{
-    datas:datas
+    datas:datas,
+    length:length,
   })
 	
 }).catch(function (error) {

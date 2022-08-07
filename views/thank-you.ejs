@@ -4,13 +4,13 @@
 <div class="container thank-you">
     <div class="card text-center">
 <div class="card" style="width: 100%;">
-    <img src="<%=imagePath%>" class="card-img-top" alt="...">
+    <img class="d-block w-100" src="<%=imagePath%>" class="card-img-top" alt="...">
     <div class="card-body">
-        <h4 class="card-title" style="font-weight: 700; font-size:25px; text-align: center;">Adopt <%=dogName%></h4>
-      <p style="font-weight: 600; font-size:18px; text-align: center;" class="">Thank You for Choosing Woofyverse </p>
+        <h4 class="card-title animate-charcter" style="font-weight: 700; font-size:55px; text-align: center;">Adopt <%=dogName%></h4>
+      <p style="font-weight: 600; font-size:35px; text-align: center;" class="">Thank You for Choosing Woofyverse </p>
     </div>
-    <ul class="list-group list-group-flush">
-         <li class="list-group-item"><span style="font-weight: 600;">Owner</span> <%=ownerName%></li>
+    <ul style="font-size:20px ;" class="list-group list-group-flush">
+         <li  class="list-group-item"><span style="font-weight: 600;">Owner</span> <%=ownerName%></li>
         <li class="list-group-item"><span style="font-weight: 600;">Age</span> <%=dogAge%></li>
         <li class="list-group-item"><span style="font-weight: 600;">Gender</span> <%=gender %></li>
         <li class="list-group-item"><span style="font-weight: 600;">Breed</span> <%=breed%></li>
@@ -36,7 +36,10 @@
         
             <a href="https://api.whatsapp.com/send?text=<%=dogName%> https://woofyverse.herokuapp.com/posts/<%=_id%>" target="_blank"  class="whatsapp-btn"><i class="fa-brands fa-whatsapp fa-2xl"></i></a>
         </div>
+       
   </div>
+  <p>⚡ <span style="font-size: 15px;" class="animate-charcter">Bookmark this page so in order to edit or delete your post in the future</span> </p>
+  <p > ⚡ <span class="animate-charcter">You can Mark your dog as Adopted through The Edit Page in order to remove it from the Adoption page</span>  </p>
 </div>
 </div>
 
