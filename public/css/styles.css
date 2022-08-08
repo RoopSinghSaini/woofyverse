@@ -205,11 +205,15 @@ a.active,a:hover{
 {
    text-transform: uppercase;
    
-
+  background-image: linear-gradient(
+    -225deg,
+    #FEC260 0%,
+    #0082e6 29%,
+      );
   background-size: auto auto;
   background-clip: border-box;
   background-size: 200% auto;
-  color: #FEC260;
+  color: #fff;
   background-clip: text;
   text-fill-color: transparent;
   -webkit-background-clip: text;
