@@ -369,7 +369,9 @@ const requestedPostId = req.params.postId;
     });
   });
 });
-
+app.get("terms-of-service", function (req, res) {
+res.render("tos")
+});
 app.get("/adopted/posts/:postId/", requiresAuth(), function(req, res){
 
   const requestedPostId = req.params.postId;
