@@ -1,0 +1,172 @@
+<%- include("partials/gg"); -%>
+
+	<!-- section banner start -->
+	<div class="header_section">
+		<div class="container-fluid">
+			
+		</div>
+		<div class="banner_main">
+			<div class="container">
+				<div class="ram">
+					<div class="row">
+					    <div class="col-sm-12">
+						    <h1 class="taital">Adopt for Lifetime</h1>
+						    <p class="consectetur_text">Give a homeless dog a new life. Your best friend awaits your call!</p>
+						    <div class="banner_bt">
+						    	<button class="read_bt"><a style="color: black" href="/permanent-adoption">Adopt</a> </button>
+						    </div>
+					    </div>
+				    </div>
+				</div>
+				<div class="box">
+					<h1 class="numbar_text">01</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- section banner end -->
+	<!-- section about start -->
+	<div class="about_section">
+		<div class="about_text">
+			<div class="container">
+				<h1 class="about_taital_1"><strong><span style="color: rgb(26, 178, 255);">Experience</span> Adopting </strong></h1>
+				<p class="magna_text">Take a sneek peek into how Adopting a dog feels like by adopting a domestic dog for a short period.</p>
+				<div class="about_bt">
+					<button class="more_bt"><a href="/experience-adoption">Adopt Temporarily</a> </button>
+				</div>
+				<div class="about">
+					<h1 class="numbar_text">02</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- section about end -->
+	<!-- section gallery start -->
+    <div class="gallery_main layout_padding">
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-sm-12">
+    				<h1 class="about_taital"><strong><span style="color: #ffffff;">Our</span> Dogs</strong></h1>
+				    <p style="color:white ;" class="sed_text">Browse through thousands of Homeless dogs ranging from different categories. All for free!!</p>
+
+    			</div>
+    		</div>
+			<%const paths=[] %>
+			<%const links=[] %>
+			<% posts.forEach(function(post){ %>
+				<%paths.push(post.imagePath)%>
+				<%links.push(post._id)%>
+			<% }) %>
+			
+    		<div class="gallery_images">
+    			<div class="row">
+    				<div class="col-sm-7">
+						<div class="gallery_blog">
+                           <a href="/posts/<%=links[0]%>"  target="_blank"><img src="<%=paths[0]%>"style="max-width: 100%; height: 300px; width: 100%;"></a>
+							
+                        <div class="overlay">
+                            <div class="text"><strong>PuppyDogPetAnimal</strong></div>
+                        </div>
+					    </div>
+    				</div>
+    				<div class="col-sm-5">
+						<div class="gallery_blog">
+							<a href="/posts/<%=links[1]%>"  target="_blank"><img src="<%=paths[1]%>" style="max-width: 100%; height: 300px; width: 100%;"> </a>
+                        <div class="overlay">
+                            <div class="text"><strong>PuppyDogPetAnimal</strong></div>
+                        </div>
+					    </div>
+    				</div>
+    			</div>
+    		</div>
+    		<div class="gallery_images">
+    			<div class="row">
+    				<div class="col-sm-5">
+						<div class="gallery_blog">
+							<a href="/posts/<%=links[2]%>"  target="_blank"><img src="<%=paths[2]%>" style="max-width: 100%; width: 100%;"></a>
+                        <div class="overlay">
+                            <div class="text"><strong>PuppyDogPetAnimal</strong></div>
+                        </div>
+					    </div>
+    				</div>
+    				<div class="col-sm-7">
+						<div class="gallery_blog">
+							<a href="/posts/<%=links[3]%>"  target="_blank"><img src="<%=paths[3]%>" style="max-width: 100%; height: 300px; width: 100%;"></a>
+                        <div class="overlay">
+                            <div class="text"><strong>PuppyDogPetAnimal</strong></div>
+                        </div>
+					    </div>
+						<div class="gallery_blog">
+							<a href="/posts/<%=links[4]%>"  target="_blank"><img src="<%=paths[4]%>" style="max-width: 100%; height: 297px; width: 100%;"></a>
+                        <div class="overlay">
+                            <div class="text"><strong>PuppyDogPetAnimal</strong></div>
+                        </div>
+					    </div>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+
+    <div class="gallery_section_2">
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-sm-8">
+    				<h1 class="pet_taital">Rehabilitate the Homeless: Be part of something beautiful</h1>
+    				<p class="lorem_text">Over 50 mil homeless dogs seek their death everyday in India, with their population going out of control and health conditions worsening there is no one to support them. This is where Woofyverse comes in, we are leveraging technology to help sove India's stray crisis. Come join our revolution. </p>
+    			<div class="banner_bt">
+					<button class="dog_bt"><a href="/adopted">Success Stories</a> </button>
+				</div>
+				
+    			</div>
+    			<div class="col-sm-4">
+    				<div class="dog_img"><img src="images/dog-img.png" style="max-width: 100%;"></div>
+    			</div>
+    		</div>
+    	</div>
+		<br><br><br><br><br><br>
+    </div>
+	
+	<!-- section gallery end -->
+
+    <!-- Javascript files-->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+      <script src="js/jquery-3.0.0.min.js"></script>
+      <script src="js/plugin.js"></script>
+      <!-- sidebar -->
+      <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+      <script src="js/custom.js"></script>
+      <!-- javascript --> 
+      <script src="js/owl.carousel.js"></script>
+      <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+      <script>
+      $(document).ready(function(){
+      $(".fancybox").fancybox({
+         openEffect: "none",
+         closeEffect: "none"
+         });
+         
+         $(".zoom").hover(function(){
+         
+         $(this).addClass('transition');
+         }, function(){
+         
+         $(this).removeClass('transition');
+         });
+         });
+         </script> 
+
+
+   <script>
+    function openNav() {
+    document.getElementById("myNav").style.width = "100%";
+    }
+
+    function closeNav() {
+   document.getElementById("myNav").style.width = "0%";
+   }
+</script>
+
+<%- include("partials/footer"); -%>

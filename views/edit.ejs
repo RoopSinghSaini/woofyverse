@@ -12,7 +12,12 @@
       <div class="form-group">
         <label class="required">Name</label>
         <input autofocus value="<%=dogName%>" class="form-control" type="text" name="dogName" required>
-        <input autofocus class="form-control" type="text" name="dogName" required>
+        <label class="required">Type of Adoption</label>
+        <select name="type" class="form-control" required>
+          <option value="<%=duration%>" selected disabled hidden><%=duration%></option>
+          <option value="long">Lifetime</option>
+          <option value="others">Temporarily</option>
+        </select>
         <label class="required">Breed</label>
         <select style="width: 400px; height: 40px" name="breed" id="breed_select" class=" form-control required" required>
           <option selected hidden disabled >Select a Breed

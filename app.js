@@ -81,6 +81,9 @@ const postSchema ={
    required:true,
    
   },
+  duration:{
+    type: String,
+  },
   breed:{
     type: String,
     required:true,
@@ -195,7 +198,7 @@ axios.request(options).then(function (response) {
 });
 })
 
-app.get('/',function(req,res){
+app.get('/permanent-adoption',function(req,res){
 if (req.oidc.isAuthenticated()) {
   const axios = require("axios");
 
@@ -216,7 +219,7 @@ var noMatch = null;
         const city = new RegExp(escapeRegex(req.query.city), 'gi');
         const state= new RegExp(escapeRegex(req.query.state), 'gi');
         
-        Post.find({$and:[{state: state}, {city:city},{adopted:false}]}, function(err, posts){
+        Post.find({$and:[{state: state}, {city:city},{adopted:false},{duration:"long"}]}, function(err, posts){
            if(err){
                console.log(err);
            } else {
@@ -239,7 +242,7 @@ var noMatch = null;
           }).sort({date:"desc"});
     } else {
         // Get all posts from DB
-       Post.find({adopted:false}, function(err, posts){
+       Post.find({$and:[{adopted:false},{duration:"long"}]}, function(err, posts){
         if(err){
           console.log(err);
         }else{
@@ -262,7 +265,9 @@ var noMatch = null;
     res.redirect('/login')
   }
 });
-
+app.get('/copyright', function(req, res) {
+res.render('copyright')
+})
 app.get('/adopted', function(req, res) {
   Post.find({adopted:true}, function(err, posts){
     if(err){
@@ -289,6 +294,7 @@ app.post("/compose", function(req, res){
       randomNumber: Math.floor(Math.random()*1000000000000000),
       dogName: req.body.dogName,
       breed: req.body.breed,
+      duration: req.body.type,
       date: req.body.postDate,
       dogAge: req.body.dogAge,
       adopted: false,
@@ -347,6 +353,7 @@ const requestedPostId = req.params.postId;
     res.render("post", {
       dogName: post.dogName,
       date: post.date,
+      duration: post.duration,
       breed: post.breed,
       ownerName: post.ownerName,
       ownerAddress: post.ownerAddress,
@@ -372,6 +379,81 @@ const requestedPostId = req.params.postId;
 app.get("/terms-of-service", function (req, res) {
 res.render("tos")
 });
+
+app.get('/experience-adoption',function(req,res){
+  if (req.oidc.isAuthenticated()) {
+    const axios = require("axios");
+  
+  const options = {
+    method: 'GET',
+    url: 'https://dog-facts2.p.rapidapi.com/facts',
+    headers: {
+      'X-RapidAPI-Key': 'aae55d79c0mshe3f425807cb2a6ep1b82a0jsnb5e979ddc835',
+      'X-RapidAPI-Host': 'dog-facts2.p.rapidapi.com'
+    }
+  };
+  
+  
+  var noMatch = null;
+  
+  
+      if(req.query.city || req.query.state) {
+          const city = new RegExp(escapeRegex(req.query.city), 'gi');
+          const state= new RegExp(escapeRegex(req.query.state), 'gi');
+          
+          Post.find({$and:[{state: state}, {city:city},{adopted:false},{duration:"others"}]}, function(err, posts){
+             if(err){
+                 console.log(err);
+             } else {
+                if(posts.length < 1) {
+                    noMatch = "No dogs up for adoption here, try some other place!";
+                }
+                axios.request(options).then(function (response) {
+                  const fact=response.data.facts[0];
+                  console.log(fact);
+              
+                res.render("temporary", {
+                  posts: posts,
+                  noMatch: noMatch,
+                  fact:fact,
+                  });   
+                }).catch(function (error) {
+                  console.error(error);
+                });
+             }
+            }).sort({date:"desc"});
+      } else {
+          // Get all posts from DB
+         Post.find({$and:[{adopted:false},{duration:"others"}]}, function(err, posts){
+          if(err){
+            console.log(err);
+          }else{
+            axios.request(options).then(function (response) {
+              const fact=response.data.facts[0];
+              console.log(fact);
+          
+            res.render("temporary", {
+              posts: posts,
+              noMatch: noMatch,
+              fact:fact,
+              });   
+            }).catch(function (error) {
+              console.error(error);
+            });
+        }
+      }).sort({date:"desc"});
+      }
+    }else {
+      res.redirect('/login')
+    }
+  });
+app.get('/', function (req, res) {
+  Post.find({adopted:false}, function(err, posts){
+res.render("index", {
+  posts:posts,
+});
+}).sort({date:"desc"}).limit(5);
+})
 app.get("/adopted/posts/:postId/", requiresAuth(), function(req, res){
 
   const requestedPostId = req.params.postId;
@@ -380,6 +462,7 @@ app.get("/adopted/posts/:postId/", requiresAuth(), function(req, res){
       res.render("adopted-post", {
         dogName: post.dogName,
         date: post.date,
+        duration: post.duration,
         breed: post.breed,
         additionalOne: post.additionalOne,
         additionalTwo: post.additionalTwo,
@@ -405,6 +488,7 @@ app.get("/:postId/edit/:ranNum", requiresAuth(), function (req, res) {
     res.render("edit", {
       dogName: post.dogName,
       date: post.date,
+      duration: post.duration,
       breed: post.breed,
       ownerName: post.ownerName,
       ownerAddress: post.ownerAddress,
@@ -435,6 +519,7 @@ app.put('/:postId/edit', function (req, res) {
       const requestedPostId = req.params.postId;
       dogName= req.body.dogName,
       adopted= req.body.adopted,
+      duration= req.body.type,
       breed= req.body.breed,
       ownerName= req.body.ownerName,
       ownerAddress= req.body.address,
@@ -454,7 +539,7 @@ app.put('/:postId/edit', function (req, res) {
       city= req.body.city,
       _id= requestedPostId,
       
-  Post.updateOne({_id: requestedPostId}, {$set:{dogName:dogName,
+  Post.updateOne({_id: requestedPostId}, {$set:{dogName:dogName,duration:duration,
     city:city,state:state,adopted:adopted,dogs:dogs,kids:kids,cats:cats,gender:gender,
     shots:shots,vaccinated:vaccinated,neutered:neutered,spayed:spayed,dogAge:dogAge,
   additionalTwo:additionalTwo,additionalOne:additionalOne,ownerName:ownerName,ownerPhone:ownerPhone,

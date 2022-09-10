@@ -19,7 +19,7 @@ body{
 a:hover {
     text-decoration: none;
 }
-.footer {
+.footer-bruh {
 	text-align: center;
 	width: 100%;
 	height: 70px;
@@ -30,7 +30,7 @@ a:hover {
   left: 0;
 }
 
-.footer p {
+.footer-bruh p {
   
 	padding-top: 28px;
 	font-size: 30px;
