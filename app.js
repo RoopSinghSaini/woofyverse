@@ -206,8 +206,8 @@ res.render("index", {
 }).sort({date:"desc"}).limit(5);
 })
 
-app.get('/permanent-adoption',function(req,res){
-if (req.oidc.isAuthenticated()) {
+app.get('/permanent-adoption',requiresAuth(), function(req,res){
+
   const axios = require("axios");
 
 const options = {
@@ -269,9 +269,6 @@ var noMatch = null;
       }
     }).sort({date:"desc"});
     }
-  }else {
-    res.redirect('/login')
-  }
 });
 app.get('/copyright', function(req, res) {
 res.render('copyright')
@@ -607,7 +604,7 @@ app.post('/donation', function(req, res){
   });
 })
 
-app.get('/breed',function(req, res){
+app.get('/breed', requiresAuth(), function(req, res){
   var noMatch = null;
   if(req.query.breed) {
     const breed = new RegExp(escapeRegex(req.query.breed), 'gi');
