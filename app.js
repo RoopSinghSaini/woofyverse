@@ -28,7 +28,7 @@ const config = {
   authRequired: false,
   auth0Logout: true,
   secret: 'a long, randomly-generated string stored in env',
-  baseURL: 'http://woofyverse.herokuapp.com',
+  baseURL: 'https://woofyverse.herokuapp.com',
   clientID: 'u7vJi1WJIxdNMLWN1LAyjleCfvFR4Sta',
   issuerBaseURL: 'https://dev-hri34pn2.us.auth0.com'
 };
@@ -196,6 +196,14 @@ axios.request(options).then(function (response) {
 }).catch(function (error) {
 	console.error(error);
 });
+})
+
+app.get('/', function (req, res) {
+  Post.find({adopted:false}, function(err, posts){
+res.render("index", {
+  posts:posts,
+});
+}).sort({date:"desc"}).limit(5);
 })
 
 app.get('/permanent-adoption',function(req,res){
@@ -447,13 +455,7 @@ app.get('/experience-adoption',function(req,res){
       res.redirect('/login')
     }
   });
-app.get('/', function (req, res) {
-  Post.find({adopted:false}, function(err, posts){
-res.render("index", {
-  posts:posts,
-});
-}).sort({date:"desc"}).limit(5);
-})
+
 app.get("/adopted/posts/:postId/", requiresAuth(), function(req, res){
 
   const requestedPostId = req.params.postId;
