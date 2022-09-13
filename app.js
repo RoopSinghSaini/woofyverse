@@ -169,6 +169,7 @@ const Post = mongoose.model("Post", postSchema);
 app.get('/news',function (req,res) {
 
   const axios = require("axios");
+  
 
 const options = {
   method: 'GET',
@@ -186,11 +187,14 @@ axios.request(options).then(function (response) {
   for (var index = 0; index < response.data.length; index++) {
     datas.push(news[index])
   }
+
+
   const length= response.data.length
   console.log(datas);
   res.render('news',{
     datas:datas,
     length:length,
+    text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
   })
 	
 }).catch(function (error) {
@@ -200,14 +204,16 @@ axios.request(options).then(function (response) {
 
 app.get('/', function (req, res) {
   Post.find({adopted:false}, function(err, posts){
+
 res.render("index", {
   posts:posts,
+  text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
 });
 }).sort({date:"desc"}).limit(5);
 })
 
-app.get('/permanent-adoption',requiresAuth(), function(req,res){
-
+app.get('/permanent-adoption', function(req,res){
+  
   const axios = require("axios");
 
 const options = {
@@ -237,11 +243,11 @@ var noMatch = null;
               axios.request(options).then(function (response) {
                 const fact=response.data.facts[0];
                 console.log(fact);
-            
               res.render("home", {
                 posts: posts,
                 noMatch: noMatch,
                 fact:fact,
+                text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
                 });   
               }).catch(function (error) {
                 console.error(error);
@@ -262,6 +268,7 @@ var noMatch = null;
             posts: posts,
             noMatch: noMatch,
             fact:fact,
+            text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
             });   
           }).catch(function (error) {
             console.error(error);
@@ -271,25 +278,33 @@ var noMatch = null;
     }
 });
 app.get('/copyright', function(req, res) {
-res.render('copyright')
+res.render('copyright',
+{
+  text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
+})
 })
 app.get('/adopted', function(req, res) {
   Post.find({adopted:true}, function(err, posts){
+    
     if(err){
         console.log(err);
     } else {
        res.render("adopted", {
          posts: posts,
+         text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
          });   
     }
    }).sort({date:"desc"});
 })
 
 app.get("/compose", requiresAuth(), function(req, res){
-    res.render("compose");
+ 
+    res.render("compose",{
+      text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
+    });
 });
 
-app.post("/compose", function(req, res){
+app.post("/compose",requiresAuth(), function(req, res){
   
   const file = req.files.imageOne;
   cloudinary.uploader.upload(file.tempFilePath,(err,result)=>{
@@ -330,11 +345,12 @@ app.post("/compose", function(req, res){
   });
   });
 
-app.get("/thank-you/:ranNum/:postId", function(req, res){
+app.get("/thank-you/:ranNum/:postId",requiresAuth(), function(req, res){
   const requestedPostId = req.params.postId;
   const ranNum = req.params.ranNum;
   Post.findOne({_id: requestedPostId}, function(err, post){
     res.render("thank-you", {
+      text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
       dogName: post.dogName,
       ranNum:ranNum,
       breed: post.breed,
@@ -356,6 +372,7 @@ const requestedPostId = req.params.postId;
 
   Post.findOne({_id: requestedPostId}, function(err, post){
     res.render("post", {
+      text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
       dogName: post.dogName,
       date: post.date,
       duration: post.duration,
@@ -382,11 +399,12 @@ const requestedPostId = req.params.postId;
   });
 });
 app.get("/terms-of-service", function (req, res) {
-res.render("tos")
+res.render("tos",{
+  text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
+})
 });
 
-app.get('/experience-adoption',function(req,res){
-  if (req.oidc.isAuthenticated()) {
+app.get('/experience-adoption', function(req,res){
     const axios = require("axios");
   
   const options = {
@@ -416,9 +434,9 @@ app.get('/experience-adoption',function(req,res){
                 axios.request(options).then(function (response) {
                   const fact=response.data.facts[0];
                   console.log(fact);
-              
                 res.render("temporary", {
                   posts: posts,
+                  text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
                   noMatch: noMatch,
                   fact:fact,
                   });   
@@ -439,6 +457,7 @@ app.get('/experience-adoption',function(req,res){
           
             res.render("temporary", {
               posts: posts,
+              text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
               noMatch: noMatch,
               fact:fact,
               });   
@@ -448,9 +467,6 @@ app.get('/experience-adoption',function(req,res){
         }
       }).sort({date:"desc"});
       }
-    }else {
-      res.redirect('/login')
-    }
   });
 
 app.get("/adopted/posts/:postId/", requiresAuth(), function(req, res){
@@ -460,6 +476,7 @@ app.get("/adopted/posts/:postId/", requiresAuth(), function(req, res){
     Post.findOne({_id: requestedPostId}, function(err, post){
       res.render("adopted-post", {
         dogName: post.dogName,
+        text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
         date: post.date,
         duration: post.duration,
         breed: post.breed,
@@ -486,6 +503,7 @@ app.get("/:postId/edit/:ranNum", requiresAuth(), function (req, res) {
   Post.findOne({_id: requestedPostId}, function(err, post){
     res.render("edit", {
       dogName: post.dogName,
+      text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
       date: post.date,
       duration: post.duration,
       breed: post.breed,
@@ -514,7 +532,7 @@ app.get("/:postId/edit/:ranNum", requiresAuth(), function (req, res) {
 });
 
 // route to handle updates
-app.put('/:postId/edit', function (req, res) {
+app.put('/:postId/edit',requiresAuth(), function (req, res) {
       const requestedPostId = req.params.postId;
       dogName= req.body.dogName,
       adopted= req.body.adopted,
@@ -567,13 +585,14 @@ app.get("/delete/:postId/:ranNum",requiresAuth(),function(req,res){
 
 app.get('/donation', requiresAuth(), function(req, res){
     res.render('donation', {
-      key: Publishable_Key
+      key: Publishable_Key,
+      text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
    })
 })
 
 
 
-app.post('/donation', function(req, res){
+app.post('/donation',requiresAuth(), function(req, res){
 
   stripe.customers.create({
       email: req.body.stripeEmail,
@@ -604,7 +623,7 @@ app.post('/donation', function(req, res){
   });
 })
 
-app.get('/breed', requiresAuth(), function(req, res){
+app.get('/breed', function(req, res){
   var noMatch = null;
   if(req.query.breed) {
     const breed = new RegExp(escapeRegex(req.query.breed), 'gi');
@@ -641,6 +660,7 @@ app.get('/breed', requiresAuth(), function(req, res){
             console.log(response.data);
             res.render("breed", {
               posts: posts,
+              text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
               noMatch: noMatch,
               breed: breed,
               origin: origin,
@@ -678,6 +698,8 @@ function spaceReplace(text) {
 setInterval(() => {
   http.get("https://woofyverse.herokuapp.com/");
 }, 25 * 60 * 1000); // every 25 minutes
+
+
 
 app.listen(port, function() {
   console.log("Server started sucessfully");

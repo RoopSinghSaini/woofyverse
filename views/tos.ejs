@@ -1,4 +1,30 @@
 <%- include("partials/second"); -%>
+<nav>
+    <input type="checkbox" id="check">
+    <label for="check" class="checkbtn">
+      <i class="fas fa-bars"></i>
+    </label>
+    <label class="logo animate-charcter-head">Woofyverse</label>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li class="nav-item dropdown">
+        <a style="color: white; font-size:16px" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+          Adopt
+        </a>
+        <ul style="line-height:0cm ;" class="dropdown-menu">
+          <li><a class="dropdown-item" href="/permanent-adoption">Adopt Permanently</a></li>
+          <li><a class="dropdown-item" href="/experience-adoption">Experience Adoption</a></li>
+          <li><a class="dropdown-item" href="/breed">Search by Breed</a></li>
+        </ul>
+      </li>
+      <li><a href="/compose">Rehome</a></li>
+      <li><a href="/adopted">Adopted</a></li>
+      <li><a href="/news">News</a></li>
+      <li><a href="/donation">Donate</a></li>
+        <li><a class="btn btn-primary logout" href="/logout"><%=text%></a></li>
+     
+  </nav>
+      <div class="container">
 <br>
 <div class="jumbotron">
 <h2 style="text-align: center;"><b>TERMS AND CONDITIONS</b></h2>
