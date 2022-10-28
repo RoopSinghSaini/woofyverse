@@ -116,14 +116,8 @@ const postSchema ={
     type:String,
     required:true,
   },
-  vaccinated: {
-    type:String,
-    required:true,
-     },
-  kids: {
-    type:String,
-    required:true,
-  },
+  vaccinated: {type:String,required:true,},
+  kids: {type:String,required:true,},
   cats: {
     type:String,
     required:true,
