@@ -78,7 +78,7 @@ mongoose.set("useCreateIndex", true);
 const postSchema ={dogName:{type: String,required:true},
   duration:{type: String},
   breed:{type: String,required:true},
-  adopted:{type: Boolean,required: tru},
+  adopted:{type: Boolean,required: true},
   date:{type:Date,required:true},
   ownerName:{type:String,required:true},
   shots:{type:String,required:true},
