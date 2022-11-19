@@ -101,6 +101,8 @@ randomNumber:Number};
 
 const Post = mongoose.model("Post", postSchema);
 
+
+
 app.get('/news',function (req,res) {
 
   const axios = require("axios");
@@ -114,13 +116,40 @@ const options = {
 };
 axios.request(options).then(function (response) {
   const news= response.data;
-  var datas= []
-  for (var index = 0; index < response.data.length; index++) {
-    datas.push(news[index])
-  }
-  const length= response.data.length
-  console.log(datas);
-  res.render('news',{
+/*
+      const page = parseInt(req.query.p)
+      const limit = parseInt(req.query.l)
+  
+      const startIndex = (page - 1) * limit
+      const endIndex = page * limit
+  
+      const results = {}
+  
+      if (endIndex< response.data.length) {
+        results.next = {
+          page: page + 1,
+          limit: limit
+        }
+      }
+      
+      if (startIndex > 0) {
+        results.previous = {
+          page: page - 1,
+          limit: limit
+        }
+      };
+
+results.results= response.data.slice(startIndex,endIndex)
+const respo= results.results;
+*/
+var datas= []
+for (var index = 0; index < response.data.length; index++) {
+  datas.push(news[index])
+}
+const length= response.data.length
+console.log(datas);
+
+res.render('news',{
     datas:datas,
     length:length,
     text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
@@ -207,7 +236,6 @@ res.render('copyright',
 
 app.get('/adopted', function(req, res) {
   Post.find({adopted:true}, function(err, posts){
-    
     if(err){
         console.log(err);
     } else {
@@ -223,6 +251,12 @@ app.get("/compose", requiresAuth(), function(req, res){
     res.render("compose",{
       text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
     });
+});
+
+app.get("/volunteer", function(req, res){
+  res.render("volunteer",{
+    text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
+  });
 });
 
 app.post("/compose",requiresAuth(), function(req, res){
