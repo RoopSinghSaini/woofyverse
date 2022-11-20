@@ -118,7 +118,7 @@ axios.request(options).then(function (response) {
   const news= response.data;
 /*
       const page = parseInt(req.query.p)
-      const limit = parseInt(req.query.l)
+      const limit = response.data.length
   
       const startIndex = (page - 1) * limit
       const endIndex = page * limit
@@ -292,7 +292,7 @@ app.get("/thank-you/:ranNum/:postId",requiresAuth(), function(req, res){
 app.get("/posts/:postId/", requiresAuth(), function(req, res){
 const requestedPostId = req.params.postId;
   Post.findOne({_id: requestedPostId}, function(err, post){
-    res.render("post", { text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN', dogName: post.dogName,date: post.date, duration: post.duration, breed: post.breed, ownerName: post.ownerName, ownerAddress: post.ownerAddress, ownerPhone: post.ownerPhone, additionalOne: post.additionalOne, additionalTwo: post.additionalTwo, dogAge: post.dogAge, spayed: post.spayed, neutered: post.neutered, vaccinated: post.vaccinated, kids: post.kids, shots: post.shots, gender:post.gender, cats: post.cats, dogs: post.dogs, state: post.state, city: post.city, imagePath: post.imagePath, _id: requestedPostI});
+    res.render("post", { text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN', dogName: post.dogName,date: post.date, duration: post.duration, breed: post.breed, ownerName: post.ownerName, ownerAddress: post.ownerAddress, ownerPhone: post.ownerPhone, additionalOne: post.additionalOne, additionalTwo: post.additionalTwo, dogAge: post.dogAge, spayed: post.spayed, neutered: post.neutered, vaccinated: post.vaccinated, kids: post.kids, shots: post.shots, gender:post.gender, cats: post.cats, dogs: post.dogs, state: post.state, city: post.city, imagePath: post.imagePath, _id: requestedPostId});
   });
 });
 
@@ -498,7 +498,7 @@ function spaceReplace(text) {
 }
 
 setInterval(() => {
-  http.get("https://woofyverse.herokuapp.com/");
+  http.get("https://woofyverse.onrender.com/");
 }, 25 * 60 * 1000); // every 25 minutes
 
 app.listen(port, function() {
