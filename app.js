@@ -259,6 +259,13 @@ app.get("/volunteer", function(req, res){
   });
 });
 
+app.get("/report-abuse", function(req, res){
+  res.render("abuse",{
+    text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
+  });
+});
+
+
 app.post("/compose",requiresAuth(), function(req, res){
   const file = req.files.imageOne;
   cloudinary.uploader.upload(file.tempFilePath,(err,result)=>{

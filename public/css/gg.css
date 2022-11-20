@@ -151,6 +151,15 @@ a {
     background-repeat: no-repeat;
 }
 
+.header_section2{
+	width: 100%; 
+	float: left;
+	background-image: url(../images/email-img.jpg);
+	height: auto;
+	padding-top: 20px;	
+	background-size: cover;
+    background-repeat: no-repeat;
+}
 .active{ 
 	background-color: #ffffff;
 	padding-top: 5px; 
