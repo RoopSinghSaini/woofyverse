@@ -365,7 +365,7 @@ app.get('/experience-adoption', function(req,res){
 app.get("/adopted/posts/:postId/", requiresAuth(), function(req, res){
   const requestedPostId = req.params.postId;
     Post.findOne({_id: requestedPostId}, function(err, post){
-      res.render("adopted-post", {dogName: post.dogName, text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN', date: post.date, duration: post.duration, breed: post.breed, additionalOne: post.additionalOne, additionalTwo: post.additionalTwo, dogAge: post.dogAge, spayed: post.spayed, neutered: post.neutered, vaccinated: post.vaccinated, kids: post.kids, shots: post.shots, gender:post.gender, cats: post.cats, dogs: post.dogs, imagePath: post.imagePath, _id: requestedPostI});
+      res.render("adopted-post", {dogName: post.dogName, text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN', date: post.date, duration: post.duration, breed: post.breed, additionalOne: post.additionalOne, additionalTwo: post.additionalTwo, dogAge: post.dogAge, spayed: post.spayed, neutered: post.neutered, vaccinated: post.vaccinated, kids: post.kids, shots: post.shots, gender:post.gender, cats: post.cats, dogs: post.dogs, imagePath: post.imagePath, _id: requestedPostId});
     });
   });
 
@@ -373,7 +373,7 @@ app.get("/:postId/edit/:ranNum", requiresAuth(), function (req, res) {
   const requestedPostId = req.params.postId;
   
   Post.findOne({_id: requestedPostId}, function(err, post){
-    res.render("edit", {dogName: post.dogName, text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN', date: post.date, duration: post.duration, breed: post.breed, ownerName: post.ownerName, ownerAddress: post.ownerAddress, ownerPhone: post.ownerPhone, additionalOne: post.additionalOne, additionalTwo: post.additionalTwo, dogAge: post.dogAge, spayed: post.spayed, neutered: post.neutered, vaccinated: post.vaccinated, kids: post.kids, adopted: post.adopted, shots: post.shots, gender:post.gender, cats: post.cats, dogs: post.dogs, state: post.state, city: post.city, imagePath: post.imagePath, _id: requestedPostI});
+    res.render("edit", {dogName: post.dogName, text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN', date: post.date, duration: post.duration, breed: post.breed, ownerName: post.ownerName, ownerAddress: post.ownerAddress, ownerPhone: post.ownerPhone, additionalOne: post.additionalOne, additionalTwo: post.additionalTwo, dogAge: post.dogAge, spayed: post.spayed, neutered: post.neutered, vaccinated: post.vaccinated, kids: post.kids, adopted: post.adopted, shots: post.shots, gender:post.gender, cats: post.cats, dogs: post.dogs, state: post.state, city: post.city, imagePath: post.imagePath, _id: requestedPostId});
   });
 });
 
