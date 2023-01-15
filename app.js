@@ -19,7 +19,7 @@ const favicon= require('serve-favicon');
 const path= require('path');
 const { log } = require("console");
 const axios = require("axios");
-const { range } = require("lodash");
+const { range, result } = require("lodash");
 
 
 // Using openid library for authentication and session management.
@@ -115,6 +115,8 @@ const options = {
   }
 };
 axios.request(options).then(function (response) {
+  
+
   const news= response.data;
 /*
       const page = parseInt(req.query.p)
@@ -142,6 +144,7 @@ axios.request(options).then(function (response) {
 results.results= response.data.slice(startIndex,endIndex)
 const respo= results.results;
 */
+
 var datas= []
 for (var index = 0; index < response.data.length; index++) {
   datas.push(news[index])
@@ -155,8 +158,8 @@ res.render('news',{
     text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
   })
 }).catch(function (error) {
-	console.error(error);
-});
+	res.send(error);
+})
 })
 
 app.get('/', function (req, res) {
@@ -406,6 +409,11 @@ app.get("/delete/:postId/:ranNum",requiresAuth(),function(req,res){
 });
 });
 
+app.get('/donate', function(req, res){
+  res.redirect("https://payments-test.cashfree.com/forms/donation-woofyverse")
+})
+
+/*
 app.get('/donation', requiresAuth(), function(req, res){
     res.render('donation', {
       key: Publishable_Key,
@@ -443,6 +451,7 @@ app.post('/donation',requiresAuth(), function(req, res){
       res.send(err)       // If some error occurs
   });
 })
+*/
 
 app.get('/breed', function(req, res){
   var noMatch = null;
