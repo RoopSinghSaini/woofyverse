@@ -1,0 +1,16 @@
+<%- include("partials/second"); -%>
+
+<h1>My Dog Posts</h1>
+<ul>
+  <% for (const dogPost of dogPosts) { %>
+    <li>
+      <p>Name: <%= dogPost.name %></p>
+      <p>Breed: <%= dogPost.breed %></p>
+      <p>Description: <%= dogPost.description %></p>
+      <a href="/<%= dogPost._id %>/edit">Edit</a>
+      <a href="/delete/<%= dogPost._id %>">Delete</a>
+    </li>
+  <% } %>
+</ul>
+
+<%- include("partials/footer"); -%>

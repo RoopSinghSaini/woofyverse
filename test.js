@@ -6,6 +6,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require('mongoose');
+const jwt = require('express-jwt');
 const http = require('http');
 const fs = require('fs');
 require('dotenv').config();
@@ -23,26 +24,32 @@ const { range, result } = require("lodash");
 
 
 // Using openid library for authentication and session management.
-
-const config = {
-  authRequired: false,
-  auth0Logout: true,
-  secret: 'a long, randomly-generated string stored in env',
-  baseURL: 'https://woofyverse.in',
-  clientID: 'u7vJi1WJIxdNMLWN1LAyjleCfvFR4Sta',
-  issuerBaseURL: 'https://dev-hri34pn2.us.auth0.com'
-};
-
 /*
 const config = {
   authRequired: false,
   auth0Logout: true,
   secret: 'a long, randomly-generated string stored in env',
+  baseURL: 'https://woofyverse.onrender.com',
+  clientID: 'u7vJi1WJIxdNMLWN1LAyjleCfvFR4Sta',
+  issuerBaseURL: 'https://dev-hri34pn2.us.auth0.com'
+};
+
+*/
+const config = {
+  authRequired: true,
+  auth0Logout: true,
+  secret: 'B8IEoF2_6XdrpYg2Vj044mj7yfCa4tzJ5IsecpGjodQtxIk4gqsBtlhaSfNgC16Q',
   baseURL: 'http://localhost:8000',
   clientID: 'u7vJi1WJIxdNMLWN1LAyjleCfvFR4Sta',
   issuerBaseURL: 'https://dev-hri34pn2.us.auth0.com'
 };
-*/
+
+const auth = jwt({
+  secret: 'B8IEoF2_6XdrpYg2Vj044mj7yfCa4tzJ5IsecpGjodQtxIk4gqsBtlhaSfNgC16Q',
+  algorithms: ['HS256'],
+  audience: 'u7vJi1WJIxdNMLWN1LAyjleCfvFR4Sta',
+  issuer: 'https://dev-hri34pn2.us.auth0.com',
+});
 
 // Using cloudinary library for hosting images path and then storing images path in mongodb database.
 cloudinary.config({ 
@@ -50,6 +57,7 @@ cloudinary.config({
   api_key: '812158734764712', 
   api_secret: 'aG5zKoQB1iX2tnqZVfmUsqVOKNU' 
 });
+
 
 const port= process.env.PORT || 8000;
 const app = express();
@@ -94,6 +102,7 @@ const postSchema ={dogName:{type: String,required:true},
   gender:{type:String,required:true},
   ownerAddress:{type:String,required:true},
   ownerPhone:{type:Number,required:true},
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   additionalOne:{type:String},
   additionalTwo:{type:String},
 imagePath:{type:String,required:true},
@@ -101,7 +110,36 @@ randomNumber:Number};
 
 const Post = mongoose.model("Post", postSchema);
 
+// Storing the user logging in through Auth0 to local MongoDB database
+const UserSchema = new mongoose.Schema({
+  auth0_id: { type: String, required: true, unique: true },
+  name: { type: String },
+  email: { type: String },
+  created_at: { type: Date, default: Date.now },
+});
+const User = mongoose.model('User', UserSchema);
 
+app.get('/callback', async (req, res) => {
+  try {
+    // Get the user's profile from Auth0
+    const { sub: auth0_id, name, email } = await auth0.handleCallback(req, res);
+
+    // Check if the user already exists in the local database
+    let user = await User.findOne({ auth0_id });
+    if (!user) {
+      // If the user doesn't exist, create a new User document
+      user = new User({ auth0_id, name, email});
+      await user.save();
+    }
+
+    // Set the user object on the session
+    req.session.user = user;
+
+    res.redirect('/');
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
 
 app.get('/news',function (req,res) {
 
@@ -140,6 +178,7 @@ axios.request(options).then(function (response) {
           limit: limit
         }
       };
+
 results.results= response.data.slice(startIndex,endIndex)
 const respo= results.results;
 */
@@ -304,6 +343,26 @@ res.render("tos",{
 })
 });
 
+
+
+app.get('/profile', requiresAuth(), (req, res) => {
+  res.send(JSON.stringify(req.oidc.user));
+});
+
+/*
+app.get('/profile', auth, async (req, res) => {
+  try {
+    // Find the user by auth0_id
+    const user = await User.findOne({ auth0_id: req.user.sub });
+    // Find all the dog posts created by the user
+    const Posts = await Post.find({ user: user._id });
+    res.render('profile', { Posts });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+*/
+
 app.get('/experience-adoption', function(req,res){
     const axios = require("axios");
   const options = {
@@ -371,42 +430,77 @@ app.get("/adopted/posts/:postId/", requiresAuth(), function(req, res){
     });
   });
 
-app.get("/:postId/edit/:ranNum", requiresAuth(), function (req, res) {
-  const requestedPostId = req.params.postId;
-  
-  Post.findOne({_id: requestedPostId}, function(err, post){
-    res.render("edit", {dogName: post.dogName, text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN', date: post.date, duration: post.duration, breed: post.breed, ownerName: post.ownerName, ownerAddress: post.ownerAddress, ownerPhone: post.ownerPhone, additionalOne: post.additionalOne, additionalTwo: post.additionalTwo, dogAge: post.dogAge, spayed: post.spayed, neutered: post.neutered, vaccinated: post.vaccinated, kids: post.kids, adopted: post.adopted, shots: post.shots, gender:post.gender, cats: post.cats, dogs: post.dogs, state: post.state, city: post.city, imagePath: post.imagePath, _id: requestedPostId});
+  // Get the Edit Dog Profile page
+  app.get('/:id/edit', auth, async (req, res) => {
+    try {
+      // Find the dog post by its id
+      const Post = await Post.findById(req.params.id);
+      if (!Post) return res.status(404).send('Dog post not found.');
+      // Find the user by auth0_id
+      const user = await User.findOne({ auth0_id: req.user.sub });
+      if (Post.user.toString() !== user._id.toString())
+        return res.status(401).send('Unauthorized');
+      // render the edit page
+      res.render('edit', {Post});
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
   });
-});
+  
 
 // route to handle updates
-app.put('/:postId/edit',requiresAuth(), function (req, res) {
-      const requestedPostId = req.params.postId; dogName= req.body.dogName,
-adopted= req.body.adopted, duration= req.body.type, breed= req.body.breed, ownerName= req.body.ownerName, ownerAddress= req.body.address, ownerPhone= req.body.ownerPhone, additionalOne= req.body.additionalOne, additionalTwo= req.body.additionalTwo, dogAge= req.body.dogAge, spayed= req.body.spayed, neutered= req.body.neutered, vaccinated= req.body.vaccinated, kids= req.body.kids, shots= req.body.shots, gender=req.body.dogGender, cats= req.body.cats, dogs= req.body.dogs, state= req.body.state,city= req.body.city, _id= requestedPostId,
-      
-  Post.updateOne({_id: requestedPostId}, {$set:{dogName:dogName,duration:duration,
-    city:city,state:state,adopted:adopted,dogs:dogs,kids:kids,cats:cats,gender:gender,
-    shots:shots,vaccinated:vaccinated,neutered:neutered,spayed:spayed,dogAge:dogAge,
-  additionalTwo:additionalTwo,additionalOne:additionalOne,ownerName:ownerName,ownerPhone:ownerPhone,
-  breed:breed,ownerAddress:ownerAddress}},{new:true},(err,data)=>{
-    if(err){
-      console.log(err)
-    }else{
-      console.log(data);
-      res.redirect('/')
-    }
-  })
-  })
+  app.put('/:id/edit', auth, requiresAuth(), async (req, res) => {
+    try {
+      // Find the dog post by its id
+      const Post = await Post.findById(req.params.id);
+      if (!Post) return res.status(404).send('Dog post not found.');
+      // Find the user by auth0_id
+      const user = await User.findOne({ auth0_id: req.user.sub });
+      if (Post.user.toString() !== user._id.toString())
+        return res.status(401).send('Unauthorized');
+      // update the fields in the dog post
+      Post.adopted= req.body.adopted, 
+      Post.duration= req.body.type, 
+      Post.breed= req.body.breed, 
+      Post.ownerName= req.body.ownerName, 
+      Post.ownerAddress= req.body.address, 
+      Post.ownerPhone= req.body.ownerPhone, 
+      Post.additionalOne= req.body.additionalOne, 
+      Post.additionalTwo= req.body.additionalTwo, 
+      Post.dogAge= req.body.dogAge, 
+      Post.spayed= req.body.spayed,
+      Post.neutered= req.body.neutered,
+Post.vaccinated= req.body.vaccinated,
+Post.kids= req.body.kids,
+Post.shots= req.body.shots,
+Post.gender=req.body.dogGender,
+Post.cats= req.body.cats,
+Post.dogs= req.body.dogs,
+Post.state= req.body.state,
+Post.city= req.body.city
+await Post.save();
+res.send(Post);
+} catch (error) {
+res.status(500).send(error.message);
+}
+});
 
-app.get("/delete/:postId/:ranNum",requiresAuth(),function(req,res){
-  Post.deleteOne({_id: req.params.postId},function(err){
-    if(err){
-      console.log(err);
-  }else{
-  res.redirect('/')
-  }
-});
-});
+  app.delete('/delete/:id', auth, async (req, res) => {
+    try {
+      // Find the dog post by its id
+      const Post = await Post.findById(req.params.id);
+      if (!Post) return res.status(404).send('Dog post not found.');
+      // Find the user by auth0_id
+      const user = await User.findOne({ auth0_id: req.user.sub });
+      if (Post.user.toString() !== user._id.toString())
+        return res.status(401).send('Unauthorized');
+      await Post.remove();
+      res.send('Dog post deleted.');
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+  });
+  
 
 app.get('/donate', function(req, res){
   res.redirect("https://payments-test.cashfree.com/forms/donation-woofyverse")
@@ -419,7 +513,9 @@ app.get('/donation', requiresAuth(), function(req, res){
       text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
    })
 })
+
 app.post('/donation',requiresAuth(), function(req, res){
+
   stripe.customers.create({
       email: req.body.stripeEmail,
       source: req.body.stripeToken,
@@ -433,6 +529,7 @@ app.post('/donation',requiresAuth(), function(req, res){
       }
   })
   .then((customer) => {
+
       return stripe.charges.create({
           amount: 100,     // Charing Rs 25
           description: 'Woofyverse animal rescue',
@@ -504,7 +601,7 @@ function spaceReplace(text) {
 
 setInterval(() => {
   http.get("https://woofyverse.onrender.com/");
-}, 25 * 60 * 1000); // every 25 minutes
+}, 14 * 60 * 1000); // every 14 minutes
 
 app.listen(port, function() {
   console.log("Server started sucessfully");
