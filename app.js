@@ -1,4 +1,4 @@
-// Woofyverse Application: https://www.woofyverse.herokuapp.com/
+// Woofyverse Application: https://www.woofyverse.in/
 // Copyright (c) 2022 Woofyverse.
 // Adopt a buddy!
 
