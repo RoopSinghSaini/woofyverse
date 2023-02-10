@@ -249,7 +249,7 @@ app.get('/adopted', function(req, res) {
    }).sort({date:"desc"});
 })
 
-app.get("/compose", requiresAuth(), function(req, res){
+app.get("/compose", function(req, res){
     res.render("compose",{
       text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
     });
