@@ -268,7 +268,7 @@ app.get("/report-abuse", function(req, res){
 });
 
 
-app.post("/compose",requiresAuth(), function(req, res){
+app.post("/compose", function(req, res){
   const file = req.files.imageOne;
   cloudinary.uploader.upload(file.tempFilePath,(err,result)=>{
     console.log(result);
