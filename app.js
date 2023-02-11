@@ -374,15 +374,16 @@ app.get("/adopted/posts/:postId/", requiresAuth(), function(req, res){
 
 app.get("/:postId/edit/:ranNum", requiresAuth(), function (req, res) {
   const requestedPostId = req.params.postId;
-  
+  no= req.params.ranNum;
   Post.findOne({_id: requestedPostId}, function(err, post){
-    res.render("edit", {dogName: post.dogName, text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN', date: post.date, duration: post.duration, breed: post.breed, ownerName: post.ownerName, ownerAddress: post.ownerAddress, ownerPhone: post.ownerPhone, additionalOne: post.additionalOne, additionalTwo: post.additionalTwo, dogAge: post.dogAge, spayed: post.spayed, neutered: post.neutered, vaccinated: post.vaccinated, kids: post.kids, adopted: post.adopted, shots: post.shots, gender:post.gender, cats: post.cats, dogs: post.dogs, state: post.state, city: post.city, imagePath: post.imagePath, _id: requestedPostId});
+    res.render("edit", {dogName: post.dogName,ranNum:no, text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN', date: post.date, duration: post.duration, breed: post.breed, ownerName: post.ownerName, ownerAddress: post.ownerAddress, ownerPhone: post.ownerPhone, additionalOne: post.additionalOne, additionalTwo: post.additionalTwo, dogAge: post.dogAge, spayed: post.spayed, neutered: post.neutered, vaccinated: post.vaccinated, kids: post.kids, adopted: post.adopted, shots: post.shots, gender:post.gender, cats: post.cats, dogs: post.dogs, state: post.state, city: post.city, imagePath: post.imagePath, _id: requestedPostId});
   });
 });
 
 // route to handle updates
 app.put('/:postId/edit/:ranNum',requiresAuth(), function (req, res) {
-      const requestedPostId = req.params.postId; dogName= req.body.dogName,
+  const no= ranNum
+      const requestedPostId = req.params.postId; dogName= req.body.dogName, ranNum=no,
 adopted= req.body.adopted, duration= req.body.type, breed= req.body.breed, ownerName= req.body.ownerName, ownerAddress= req.body.address, ownerPhone= req.body.ownerPhone, additionalOne= req.body.additionalOne, additionalTwo= req.body.additionalTwo, dogAge= req.body.dogAge, spayed= req.body.spayed, neutered= req.body.neutered, vaccinated= req.body.vaccinated, kids= req.body.kids, shots= req.body.shots, gender=req.body.dogGender, cats= req.body.cats, dogs= req.body.dogs, state= req.body.state,city= req.body.city, _id= requestedPostId,
       
   Post.updateOne({_id: requestedPostId}, {$set:{dogName:dogName,duration:duration,
