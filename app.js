@@ -249,7 +249,7 @@ app.get('/adopted', function(req, res) {
    }).sort({date:"desc"});
 })
 
-app.get("/compose", function(req, res){
+app.get("/compose", requiresAuth(), function(req, res){
     res.render("compose",{
       text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
     });
@@ -268,7 +268,7 @@ app.get("/report-abuse", function(req, res){
 });
 
 
-app.post("/compose", function(req, res){
+app.post("/compose", requiresAuth(), function(req, res){
   const file = req.files.imageOne;
   cloudinary.uploader.upload(file.tempFilePath,(err,result)=>{
     console.log(result);
