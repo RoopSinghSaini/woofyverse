@@ -381,9 +381,8 @@ app.get("/:postId/edit/:ranNum", requiresAuth(), function (req, res) {
 });
 
 // route to handle updates
-app.put('/:postId/edit/:ranNum',requiresAuth(), function (req, res) {
-  const no= ranNum
-      const requestedPostId = req.params.postId; dogName= req.body.dogName, ranNum=no,
+app.put('/:postId/edit',requiresAuth(), function (req, res) {
+      const requestedPostId = req.params.postId; dogName= req.body.dogName,
 adopted= req.body.adopted, duration= req.body.type, breed= req.body.breed, ownerName= req.body.ownerName, ownerAddress= req.body.address, ownerPhone= req.body.ownerPhone, additionalOne= req.body.additionalOne, additionalTwo= req.body.additionalTwo, dogAge= req.body.dogAge, spayed= req.body.spayed, neutered= req.body.neutered, vaccinated= req.body.vaccinated, kids= req.body.kids, shots= req.body.shots, gender=req.body.dogGender, cats= req.body.cats, dogs= req.body.dogs, state= req.body.state,city= req.body.city, _id= requestedPostId,
       
   Post.updateOne({_id: requestedPostId}, {$set:{dogName:dogName,duration:duration,
