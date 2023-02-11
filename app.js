@@ -291,7 +291,7 @@ app.get("/thank-you/:ranNum/:postId",requiresAuth(), function(req, res){
   });
 });
 
-app.get("/posts/:postId/:ranNum", requiresAuth(), function(req, res){
+app.get("/posts/:postId", requiresAuth(), function(req, res){
 const requestedPostId = req.params.postId;
 const ranNum= req.params.ranNum;
   Post.findOne({_id: requestedPostId}, function(err, post){
