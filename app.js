@@ -449,6 +449,9 @@ app.post('/donation',requiresAuth(), function(req, res){
   });
 })
 */
+app.get('/team', function(req,res){
+res.render("team");
+})
 
 app.get('/breed', function(req, res){
   var noMatch = null;
