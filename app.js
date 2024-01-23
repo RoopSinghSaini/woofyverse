@@ -104,61 +104,7 @@ const Post = mongoose.model("Post", postSchema);
 
 
 app.get('/news',function (req,res) {
-
-  const axios = require("axios");
-const options = {
-  method: 'GET',
-  url: 'https://daily-dog-news.p.rapidapi.com/news',
-  headers: {
-    'X-RapidAPI-Key': 'aae55d79c0mshe3f425807cb2a6ep1b82a0jsnb5e979ddc835',
-    'X-RapidAPI-Host': 'daily-dog-news.p.rapidapi.com'
-  }
-};
-axios.request(options).then(function (response) {
-  
-
-  const news= response.data;
-/*
-      const page = parseInt(req.query.p)
-      const limit = response.data.length
-  
-      const startIndex = (page - 1) * limit
-      const endIndex = page * limit
-  
-      const results = {}
-  
-      if (endIndex< response.data.length) {
-        results.next = {
-          page: page + 1,
-          limit: limit
-        }
-      }
-      
-      if (startIndex > 0) {
-        results.previous = {
-          page: page - 1,
-          limit: limit
-        }
-      };
-results.results= response.data.slice(startIndex,endIndex)
-const respo= results.results;
-*/
-
-var datas= []
-for (var index = 0; index < response.data.length; index++) {
-  datas.push(news[index])
-}
-const length= response.data.length
-console.log(datas);
-
-res.render('news',{
-    datas:datas,
-    length:length,
-    text: req.oidc.isAuthenticated() ? 'LOGOUT' : 'LOGIN',
-  })
-}).catch(function (error) {
-	res.send(error);
-})
+  res.render("team");
 })
 
 app.get('/', function (req, res) {
